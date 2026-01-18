@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マッチングアプリ専門写真撮影 | 飲み会1回分で人生が変わる</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.8;
+        }
+
+        /* ============================================ */
+        /* SECTION 1: ヘッダー（問題提起→解決策） */
+        /* ============================================ */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,107,107,0.03) 0%, transparent 50%);
+            animation: pulse 15s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* 問題提起（リアルな声） */
+        .problem-voices {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .voice-bubble {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            color: #ff8a8a;
+            max-width: 350px;
+        }
+        .voice-bubble::before {
+            content: '"';
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-right: 5px;
+        }
+        .voice-bubble::after {
+            content: '"';
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            margin-left: 5px;
+        }
+
+        /* メインコピー */
+        .hero-hook {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-main {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-main .highlight {
+            background: linear-gradient(transparent 60%, rgba(255,107,107,0.4) 60%);
+        }
+        .hero-main .red { color: #ff6b6b; }
+        .hero-main .yellow { color: #feca57; }
+        .hero-main .green { color: #10ac84; }
+
+        .hero-sub {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-sub strong {
+            color: #fff;
+        }
+
+        /* CTA */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            padding: 20px 60px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 30px rgba(255,107,107,0.3);
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255,107,107,0.5);
+        }
+        .cta-note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Stats */
+        .hero-stats {
+            display: flex;
+            gap: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #48dbfb;
+        }
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* ============================================ */
+        /* SECTION 2: 証拠（データ・実績） */
+        /* ============================================ */
+        .proof {
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            padding: 100px 20px;
+        }
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-label {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff6b6b;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 60px;
+        }
+
+        /* Before/After Cards */
+        .ba-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .ba-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .ba-card-title {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .ba-comparison {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .ba-box {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .ba-box.before {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.3);
+        }
+        .ba-box.after {
+            background: rgba(16,172,132,0.1);
+            border: 1px solid rgba(16,172,132,0.3);
+        }
+        .ba-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .ba-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .ba-box.before .ba-value { color: #ff6b6b; }
+        .ba-box.after .ba-value { color: #10ac84; }
+        .ba-arrow {
+            font-size: 2rem;
+            color: #feca57;
+        }
+        .ba-quote {
+            font-style: italic;
+            color: #aaa;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border-left: 3px solid #10ac84;
+        }
+        .ba-source {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+            font-style: normal;
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(72,219,251,0.1), rgba(16,172,132,0.1));
+            border: 1px solid rgba(72,219,251,0.3);
+            border-radius: 20px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .stats-item {
+            padding: 20px;
+        }
+        .stats-value {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #48dbfb, #10ac84);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stats-label {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ============================================ */
+        /* SECTION 3: お客様の声 */
+        /* ============================================ */
+        .testimonials {
+            background: #0a0a0a;
+            padding: 100px 20px;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            font-size: 4rem;
+            color: rgba(255,107,107,0.2);
+            line-height: 1;
+        }
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 20px;
+            padding-top: 30px;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .testimonial-info {
+            flex: 1;
+        }
+        .testimonial-name {
+            font-weight: 600;
+        }
+        .testimonial-detail {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .testimonial-result {
+            background: rgba(16,172,132,0.2);
+            color: #10ac84;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* ============================================ */
+        /* SECTION 4: 共感セクション */
+        /* ============================================ */
+        .empathy {
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            padding: 100px 20px;
+        }
+        .empathy-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .empathy-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .empathy-list {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+        .empathy-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 3px solid #ff6b6b;
+        }
+        .empathy-check {
+            color: #ff6b6b;
+            font-size: 1.5rem;
+        }
+        .empathy-text {
+            font-size: 1.1rem;
+        }
+        .empathy-solution {
+            background: linear-gradient(135deg, rgba(16,172,132,0.2), rgba(16,172,132,0.05));
+            border: 2px solid rgba(16,172,132,0.5);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+        }
+        .empathy-solution h3 {
+            font-size: 1.5rem;
+            color: #10ac84;
+            margin-bottom: 15px;
+        }
+        .empathy-solution p {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        /* ============================================ */
+        /* SECTION 5: サービス概要 */
+        /* ============================================ */
+        .service {
+            background: #0a0a0a;
+            padding: 100px 20px;
+        }
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .plan-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+        .plan-card.popular {
+            border-color: #10ac84;
+            background: linear-gradient(135deg, rgba(16,172,132,0.1), rgba(16,172,132,0.02));
+        }
+        .plan-card.popular::before {
+            content: "一番人気";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #10ac84, #0abde3);
+            color: #000;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .plan-card.premium {
+            border-color: #feca57;
+            background: linear-gradient(135deg, rgba(254,202,87,0.1), rgba(254,202,87,0.02));
+        }
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .plan-card:nth-child(1) .plan-name { color: #48dbfb; }
+        .plan-card:nth-child(2) .plan-name { color: #10ac84; }
+        .plan-card:nth-child(3) .plan-name { color: #feca57; }
+        .plan-desc {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        .plan-unit {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+        .plan-features {
+            text-align: left;
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .plan-features li::before {
+            content: "✓";
+            color: #10ac84;
+            font-weight: 700;
+        }
+        .plan-cta {
+            display: block;
+            padding: 15px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .plan-card:nth-child(1) .plan-cta {
+            background: transparent;
+            border: 2px solid #48dbfb;
+            color: #48dbfb;
+        }
+        .plan-card:nth-child(1) .plan-cta:hover {
+            background: #48dbfb;
+            color: #000;
+        }
+        .plan-card:nth-child(2) .plan-cta {
+            background: linear-gradient(135deg, #10ac84, #0abde3);
+            color: #000;
+        }
+        .plan-card:nth-child(3) .plan-cta {
+            background: linear-gradient(135deg, #feca57, #ff9f43);
+            color: #000;
+        }
+
+        /* Flow */
+        .flow {
+            margin-top: 60px;
+        }
+        .flow-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+        }
+        .flow-steps {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+        .flow-num {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 15px;
+        }
+        .flow-step-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .flow-step-desc {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            color: #feca57;
+            font-size: 2rem;
+        }
+        @media (max-width: 768px) {
+            .flow-arrow {
+                display: none;
+            }
+        }
+
+        /* ============================================ */
+        /* SECTION 6: 特典 */
+        /* ============================================ */
+        .bonus {
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            padding: 100px 20px;
+        }
+        .bonus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .bonus-card {
+            background: linear-gradient(135deg, rgba(254,202,87,0.1), rgba(254,202,87,0.02));
+            border: 2px solid rgba(254,202,87,0.3);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .bonus-card::before {
+            content: "特典";
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #feca57;
+            color: #000;
+            padding: 5px 40px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+        }
+        .bonus-num {
+            display: inline-block;
+            background: #feca57;
+            color: #000;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .bonus-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #feca57;
+        }
+        .bonus-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+        .bonus-value {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* ============================================ */
+        /* SECTION 7: 保証 */
+        /* ============================================ */
+        .guarantee {
+            background: #0a0a0a;
+            padding: 100px 20px;
+        }
+        .guarantee-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(16,172,132,0.15), rgba(16,172,132,0.02));
+            border: 3px solid #10ac84;
+            border-radius: 30px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .guarantee-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .guarantee-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #10ac84;
+        }
+        .guarantee-text {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 2;
+        }
+        .guarantee-conditions {
+            text-align: left;
+            background: rgba(0,0,0,0.3);
+            padding: 25px;
+            border-radius: 15px;
+        }
+        .guarantee-conditions h4 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #888;
+        }
+        .guarantee-conditions ul {
+            list-style: none;
+        }
+        .guarantee-conditions li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #aaa;
+        }
+        .guarantee-conditions li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10ac84;
+        }
+
+        /* ============================================ */
+        /* SECTION 8: FAQ */
+        /* ============================================ */
+        .faq {
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            padding: 100px 20px;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .faq-question {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .faq-q {
+            background: #ff6b6b;
+            color: #fff;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .faq-question-text {
+            flex: 1;
+            font-weight: 600;
+        }
+        .faq-answer {
+            padding: 0 30px 25px 80px;
+            color: #aaa;
+            line-height: 1.9;
+        }
+
+        /* ============================================ */
+        /* SECTION 9: 温かい言葉（クロージング） */
+        /* ============================================ */
+        .closing {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 100%);
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .closing-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .closing-message {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            line-height: 2.2;
+            margin-bottom: 50px;
+            color: #ccc;
+        }
+        .closing-message strong {
+            color: #fff;
+        }
+        .closing-message .highlight-text {
+            background: linear-gradient(transparent 60%, rgba(254,202,87,0.3) 60%);
+            color: #fff;
+        }
+        .closing-signature {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .closing-signature p {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .final-cta-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .final-cta-sub {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        .final-cta .cta-button {
+            background: #fff;
+            color: #ee5a24;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        }
+        .final-cta .cta-button:hover {
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .final-cta-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        .footer {
+            background: #050505;
+            padding: 40px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+        }
+        .footer a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        /* Navigation */
+        .nav-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            z-index: 1000;
+        }
+        .nav-back a {
+            color: #48dbfb;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ee5a24;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-back">
+        <a href="index.html">← ダッシュボードに戻る</a>
+    </div>
+    <div class="cc-badge">CC10 LP FULL</div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 1: ヘッダー（問題提起→解決策） -->
+    <!-- ============================================ -->
+    <section class="hero">
+        <!-- 問題提起：リアルな声 -->
+        <div class="problem-voices">
+            <div class="voice-bubble">マッチングアプリに載せる写真がない...</div>
+            <div class="voice-bubble">撮ってくれる友達もいない...</div>
+            <div class="voice-bubble">自撮りだと「必死感」が出る...</div>
+        </div>
+
+        <!-- 解決策 -->
+        <p class="hero-hook">その悩み、<strong>30分</strong>で解決します。</p>
+        <h1 class="hero-main">
+            <span class="highlight">いいね数、</span><span class="red">平均2.5倍</span>に。<br>
+            マッチングアプリ<span class="yellow">専門</span>撮影
+        </h1>
+        <p class="hero-sub">
+            一人で来る人が<strong>9割</strong>。恥ずかしくないです。<br>
+            マッチングしなければ<strong>全額返金</strong>。
+        </p>
+
+        <a href="#plan" class="cta-button">30秒で無料相談する</a>
+        <p class="cta-note">※ しつこい営業は一切しません</p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">4,100+</div>
+                <div class="hero-stat-label">撮影実績</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">94%</div>
+                <div class="hero-stat-label">いいね増加率</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">¥5,980〜</div>
+                <div class="hero-stat-label">飲み会1回分</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 2: 証拠（データ・実績） -->
+    <!-- ============================================ -->
+    <section class="proof">
+        <div class="section-inner">
+            <p class="section-label">Evidence</p>
+            <h2 class="section-title">写真を変えるだけで、<span style="color: #10ac84;">これだけ変わる</span></h2>
+
+            <div class="ba-grid">
+                <div class="ba-card">
+                    <p class="ba-card-title">32歳 IT企業営業 / Pairs使用</p>
+                    <div class="ba-comparison">
+                        <div class="ba-box before">
+                            <p class="ba-label">Before</p>
+                            <p class="ba-value">2件/週</p>
+                        </div>
+                        <span class="ba-arrow">→</span>
+                        <div class="ba-box after">
+                            <p class="ba-label">After</p>
+                            <p class="ba-value">30件/週</p>
+                        </div>
+                    </div>
+                    <p class="ba-quote">
+                        撮影から3週間で彼女ができました。もっと早く頼めばよかった...
+                        <span class="ba-source">— note体験談より</span>
+                    </p>
+                </div>
+
+                <div class="ba-card">
+                    <p class="ba-card-title">28歳 メーカー勤務 / Omiai使用</p>
+                    <div class="ba-comparison">
+                        <div class="ba-box before">
+                            <p class="ba-label">Before</p>
+                            <p class="ba-value">30いいね</p>
+                        </div>
+                        <span class="ba-arrow">→</span>
+                        <div class="ba-box after">
+                            <p class="ba-label">After</p>
+                            <p class="ba-value">201いいね</p>
+                        </div>
+                    </div>
+                    <p class="ba-quote">
+                        プロフィールは1文字も変えてません。写真だけでここまで変わるとは...
+                        <span class="ba-source">— YouTube体験動画より</span>
+                    </p>
+                </div>
+
+                <div class="ba-card">
+                    <p class="ba-card-title">35歳 公務員 / with使用</p>
+                    <div class="ba-comparison">
+                        <div class="ba-box before">
+                            <p class="ba-label">Before</p>
+                            <p class="ba-value">月5件</p>
+                        </div>
+                        <span class="ba-arrow">→</span>
+                        <div class="ba-box after">
+                            <p class="ba-label">After</p>
+                            <p class="ba-value">月87件</p>
+                        </div>
+                    </div>
+                    <p class="ba-quote">
+                        正直、年齢的にもう諦めてました。でも写真変えたら世界が変わった。
+                        <span class="ba-source">— アンケート回答より</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-banner">
+                <div class="stats-item">
+                    <p class="stats-value">94%</p>
+                    <p class="stats-label">いいねが増加した人</p>
+                </div>
+                <div class="stats-item">
+                    <p class="stats-value">+25</p>
+                    <p class="stats-label">平均いいね増加数</p>
+                </div>
+                <div class="stats-item">
+                    <p class="stats-value">36%→75%</p>
+                    <p class="stats-label">マッチング率変化</p>
+                </div>
+                <div class="stats-item">
+                    <p class="stats-value">4,100+</p>
+                    <p class="stats-label">累計撮影人数</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 3: お客様の声 -->
+    <!-- ============================================ -->
+    <section class="testimonials">
+        <div class="section-inner">
+            <p class="section-label">Voice</p>
+            <h2 class="section-title">実際に利用された方の<span style="color: #feca57;">リアルな声</span></h2>
+
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        最初は恥ずかしかったけど、カメラマンさんが話しやすくて自然に笑えました。
+                        <strong>「緊張しなくていいですよ」</strong>って言われて、本当に楽になった。
+                        友達に撮ってもらった感じの写真が撮れて満足です。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">T.S</div>
+                        <div class="testimonial-info">
+                            <p class="testimonial-name">T.Sさん（29歳・会社員）</p>
+                            <p class="testimonial-detail">Pairs利用 / 東京</p>
+                        </div>
+                        <span class="testimonial-result">いいね3倍</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        正直、<strong>プロに頼むのは「必死感」が出ると思ってた</strong>。
+                        でも出来上がった写真は本当に自然で、友達にも「いい写真だね」って言われた。
+                        1万円以下でこのクオリティは安いと思う。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">K.M</div>
+                        <div class="testimonial-info">
+                            <p class="testimonial-name">K.Mさん（34歳・エンジニア）</p>
+                            <p class="testimonial-detail">Omiai利用 / 大阪</p>
+                        </div>
+                        <span class="testimonial-result">2週間で彼女</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        <strong>一人で行くのが不安</strong>だったけど、スタッフさんも「みんな一人で来ますよ」って。
+                        実際、周りも一人の人ばかりで安心した。
+                        撮影場所も人目につかない所を選んでくれて配慮を感じました。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">Y.H</div>
+                        <div class="testimonial-info">
+                            <p class="testimonial-name">Y.Hさん（31歳・営業）</p>
+                            <p class="testimonial-detail">with利用 / 名古屋</p>
+                        </div>
+                        <span class="testimonial-result">いいね5倍</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">
+                        返金保証があったから試しに申し込んだ。
+                        結果、<strong>いいねが47件から189件に</strong>。返金どころか、追加でレタッチもお願いした。
+                        本当にリスクゼロだったのがデカかった。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">S.T</div>
+                        <div class="testimonial-info">
+                            <p class="testimonial-name">S.Tさん（27歳・デザイナー）</p>
+                            <p class="testimonial-detail">東カレデート利用 / 東京</p>
+                        </div>
+                        <span class="testimonial-result">いいね4倍</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 4: 共感セクション -->
+    <!-- ============================================ -->
+    <section class="empathy">
+        <div class="empathy-content">
+            <h2 class="empathy-title">
+                こんな悩み、<span style="color: #ff6b6b;">ありませんか？</span>
+            </h2>
+
+            <div class="empathy-list">
+                <div class="empathy-item">
+                    <span class="empathy-check">✓</span>
+                    <p class="empathy-text">マッチングアプリに載せられる<strong>まともな写真が1枚もない</strong></p>
+                </div>
+                <div class="empathy-item">
+                    <span class="empathy-check">✓</span>
+                    <p class="empathy-text">写真を撮ってくれる<strong>友達がいない</strong>（頼むのも恥ずかしい）</p>
+                </div>
+                <div class="empathy-item">
+                    <span class="empathy-check">✓</span>
+                    <p class="empathy-text">自撮りは<strong>「必死感」</strong>が出てしまう</p>
+                </div>
+                <div class="empathy-item">
+                    <span class="empathy-check">✓</span>
+                    <p class="empathy-text">プロに頼むのは<strong>ちょっと恥ずかしい</strong></p>
+                </div>
+                <div class="empathy-item">
+                    <span class="empathy-check">✓</span>
+                    <p class="empathy-text">いいねが来なくて、<strong>もう諦めかけている</strong></p>
+                </div>
+            </div>
+
+            <div class="empathy-solution">
+                <h3>その気持ち、痛いほどわかります。</h3>
+                <p>
+                    実は、私たちのスタッフも全員<strong>「一人で来た経験者」</strong>です。<br>
+                    恥ずかしさも、不安も、全部わかっています。<br>
+                    だからこそ、<strong>あなたが緊張しない撮影</strong>ができるんです。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 5: サービス概要（プラン） -->
+    <!-- ============================================ -->
+    <section class="service" id="plan">
+        <div class="section-inner">
+            <p class="section-label">Plan</p>
+            <h2 class="section-title">あなたに合った<span style="color: #48dbfb;">プラン</span>を選べます</h2>
+
+            <div class="plan-grid">
+                <!-- 梅プラン -->
+                <div class="plan-card">
+                    <h3 class="plan-name">お試しプラン</h3>
+                    <p class="plan-desc">まずは1枚、試してみたい方に</p>
+                    <p class="plan-price">¥5,980<span>（税込）</span></p>
+                    <p class="plan-unit">撮影時間 20分</p>
+                    <ul class="plan-features">
+                        <li>納品枚数 10枚</li>
+                        <li>基本レタッチ付き</li>
+                        <li>最短翌日納品</li>
+                        <li>LINE事前相談OK</li>
+                    </ul>
+                    <a href="#" class="plan-cta">このプランで相談する</a>
+                </div>
+
+                <!-- 竹プラン -->
+                <div class="plan-card popular">
+                    <h3 class="plan-name">スタンダード</h3>
+                    <p class="plan-desc">迷ったらこれ！一番選ばれています</p>
+                    <p class="plan-price">¥12,800<span>（税込）</span></p>
+                    <p class="plan-unit">撮影時間 45分</p>
+                    <ul class="plan-features">
+                        <li>納品枚数 30〜40枚</li>
+                        <li>全データ納品</li>
+                        <li>フルレタッチ対応</li>
+                        <li>撮影場所2箇所OK</li>
+                        <li>LINE事前相談付き</li>
+                        <li>全額返金保証</li>
+                    </ul>
+                    <a href="#" class="plan-cta">このプランで相談する</a>
+                </div>
+
+                <!-- 松プラン -->
+                <div class="plan-card premium">
+                    <h3 class="plan-name">プロデュース</h3>
+                    <p class="plan-desc">本気で変わりたい方に</p>
+                    <p class="plan-price">¥33,000<span>（税込）</span></p>
+                    <p class="plan-unit">撮影時間 60分</p>
+                    <ul class="plan-features">
+                        <li>納品枚数 50枚以上</li>
+                        <li>ファッションコーディネート</li>
+                        <li>ヘアセット付き</li>
+                        <li>プロフィール文作成</li>
+                        <li>アプリ攻略アドバイス</li>
+                        <li>再撮影保証付き</li>
+                    </ul>
+                    <a href="#" class="plan-cta">このプランで相談する</a>
+                </div>
+            </div>
+
+            <!-- Flow -->
+            <div class="flow">
+                <h3 class="flow-title">ご利用の流れ</h3>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-num">1</div>
+                        <p class="flow-step-title">LINE相談</p>
+                        <p class="flow-step-desc">希望日時・プランを<br>お伝えください</p>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="flow-num">2</div>
+                        <p class="flow-step-title">撮影当日</p>
+                        <p class="flow-step-desc">リラックスして<br>撮影するだけ</p>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="flow-num">3</div>
+                        <p class="flow-step-title">データ納品</p>
+                        <p class="flow-step-desc">最短翌日に<br>お届け</p>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="flow-num">4</div>
+                        <p class="flow-step-title">いいね増加！</p>
+                        <p class="flow-step-desc">写真を変えて<br>マッチング開始</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 6: 特典 -->
+    <!-- ============================================ -->
+    <section class="bonus">
+        <div class="section-inner">
+            <p class="section-label">Bonus</p>
+            <h2 class="section-title">今だけの<span style="color: #feca57;">3大特典</span></h2>
+
+            <div class="bonus-grid">
+                <div class="bonus-card">
+                    <span class="bonus-num">1</span>
+                    <h3 class="bonus-title">プロフィール添削シート</h3>
+                    <p class="bonus-desc">
+                        マッチングアプリ専門カメラマンが監修した、
+                        <strong>いいねが増えるプロフィールの書き方</strong>をプレゼント。
+                        写真と一緒にプロフィールも改善できます。
+                    </p>
+                    <p class="bonus-value">通常価格 ¥3,000相当</p>
+                </div>
+
+                <div class="bonus-card">
+                    <span class="bonus-num">2</span>
+                    <h3 class="bonus-title">アプリ攻略マニュアル</h3>
+                    <p class="bonus-desc">
+                        Pairs、Omiai、with、東カレ...各アプリの特徴と攻略法を解説。
+                        <strong>どのアプリで勝負すべきか</strong>がわかります。
+                    </p>
+                    <p class="bonus-value">通常価格 ¥5,000相当</p>
+                </div>
+
+                <div class="bonus-card">
+                    <span class="bonus-num">3</span>
+                    <h3 class="bonus-title">LINE相談無制限</h3>
+                    <p class="bonus-desc">
+                        撮影後も<strong>いつでもLINEで相談OK</strong>。
+                        「この写真、メインとサブどっちがいい？」など、
+                        気軽に聞いてください。
+                    </p>
+                    <p class="bonus-value">期間無制限</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 7: 保証 -->
+    <!-- ============================================ -->
+    <section class="guarantee">
+        <div class="section-inner">
+            <div class="guarantee-box">
+                <p class="guarantee-icon">🛡️</p>
+                <h2 class="guarantee-title">マッチングしなければ、全額返金。</h2>
+                <p class="guarantee-text">
+                    私たちは、写真の力を信じています。<br>
+                    写真を変えれば、いいねは増える。マッチングは増える。<br>
+                    もし増えなかったら、<strong>1円もいただきません。</strong><br><br>
+                    あなたのリスクは<strong>ゼロ</strong>です。
+                </p>
+                <div class="guarantee-conditions">
+                    <h4>返金保証の条件</h4>
+                    <ul>
+                        <li>撮影した写真をプロフィールに設定していること</li>
+                        <li>1ヶ月以上アプリを継続利用していること</li>
+                        <li>撮影前と比較していいね数が増えていないこと</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 8: FAQ -->
+    <!-- ============================================ -->
+    <section class="faq">
+        <div class="section-inner">
+            <p class="section-label">FAQ</p>
+            <h2 class="section-title">よくある<span style="color: #48dbfb;">質問</span></h2>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-q">Q</span>
+                        <p class="faq-question-text">一人で行くのが恥ずかしいのですが...</p>
+                    </div>
+                    <div class="faq-answer">
+                        ご安心ください。<strong>9割以上の方が一人でご来店</strong>されています。
+                        むしろ一人の方がリラックスして撮影できるので、自然な表情が撮れます。
+                        撮影場所も人目につかない場所を選びますので、知り合いに見られる心配もありません。
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-q">Q</span>
+                        <p class="faq-question-text">カメラの前で緊張してしまいそうです...</p>
+                    </div>
+                    <div class="faq-answer">
+                        大丈夫です。<strong>最初の10分は撮影せず、雑談</strong>から始めます。
+                        「好きな食べ物は？」「最近ハマってることは？」など、
+                        リラックスできるまでお話しします。
+                        緊張がほぐれてから撮影開始するので、自然な笑顔が撮れますよ。
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-q">Q</span>
+                        <p class="faq-question-text">プロに撮ってもらうと「やらせ感」が出ませんか？</p>
+                    </div>
+                    <div class="faq-answer">
+                        それ、よく聞かれます。結論から言うと、<strong>出ません</strong>。
+                        なぜなら、私たちは「友達に撮ってもらった風」を目指しているからです。
+                        スタジオではなく、カフェや公園で。ポーズを決めるのではなく、自然な仕草を。
+                        「いい写真だね」と言われても、プロに頼んだとはバレません。
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-q">Q</span>
+                        <p class="faq-question-text">当日の服装はどうすればいいですか？</p>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>普段着でOK</strong>です。ただ、白・黒・紺など無地のシンプルな服がおすすめ。
+                        派手な柄やロゴは避けた方がいいですね。
+                        不安な方は、事前にLINEで服の写真を送っていただければアドバイスします。
+                        プロデュースプランなら、当日コーディネート込みなので手ぶらでOKです。
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span class="faq-q">Q</span>
+                        <p class="faq-question-text">本当にいいねは増えますか？</p>
+                    </div>
+                    <div class="faq-answer">
+                        <strong>94%の方がいいね増加を実感</strong>しています（自社調べ）。
+                        平均すると、いいね数は2.5倍に。
+                        ただし、写真だけでなくプロフィールも重要です。
+                        だから特典として「プロフィール添削シート」もお付けしています。
+                        万が一増えなければ、全額返金するのでリスクはありません。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 9: 温かい言葉（クロージング） -->
+    <!-- ============================================ -->
+    <section class="closing">
+        <div class="closing-content">
+            <p class="closing-message">
+                最後まで読んでいただき、ありがとうございます。<br><br>
+
+                正直に言います。<br>
+                <strong>写真を変えるだけで人生が変わる</strong>なんて、<br>
+                最初は私も信じていませんでした。<br><br>
+
+                でも、4,100人以上の方の撮影をしてきて、<br>
+                「彼女ができました」「結婚しました」という報告を<br>
+                たくさんいただくようになりました。<br><br>
+
+                <span class="highlight-text">たった1枚の写真が、人生を変える</span>。<br>
+                それは、嘘じゃなかったんです。<br><br>
+
+                あなたが今、少しでも「変わりたい」と思っているなら。<br>
+                その気持ちを、私たちに預けてみませんか？<br><br>
+
+                <strong>飲み会1回分の投資で、人生は変わります。</strong>
+            </p>
+
+            <div class="closing-signature">
+                <p>マッチングアプリ専門撮影サービス</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2 class="final-cta-title">今すぐ、最初の一歩を。</h2>
+        <p class="final-cta-sub">
+            LINEで30秒。まずは無料相談から始めましょう。
+        </p>
+        <a href="#" class="cta-button">無料相談してみる</a>
+        <p class="final-cta-note">※ しつこい営業は一切しません。お気軽にどうぞ。</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>マッチングアプリ専門写真撮影サービス</p>
+        <p style="margin-top: 10px;">
+            <a href="#">特定商取引法に基づく表記</a> ｜
+            <a href="#">プライバシーポリシー</a> ｜
+            <a href="index.html">調査ダッシュボード</a>
+        </p>
+        <p style="margin-top: 20px;">© 2026 All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

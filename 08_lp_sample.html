@@ -116,16 +116,24 @@
 
         /* Full-size Header Sections */
         .header-showcase {
-            padding: 40px 20px;
+            padding: 40px 0;
+            width: 100%;
+            max-width: none;
+        }
+        .header-showcase .section-title {
+            padding: 0 20px;
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 0 auto 20px;
         }
 
-        /* Header Pattern */
+        /* Header Pattern - Full Width */
         .header-pattern {
             margin-bottom: 60px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
+            width: 100%;
+            border: none;
+            border-top: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            border-radius: 0;
             overflow: hidden;
         }
         .pattern-label {
@@ -144,10 +152,12 @@
             font-size: 0.8rem;
         }
 
-        /* Full Width Header */
+        /* Full Width Header - 100% width */
         .full-header {
             background: linear-gradient(135deg, #2d2d44 0%, #1a1a2e 100%);
-            padding: 60px 40px;
+            padding: 80px 20px;
+            width: 100%;
+            min-height: 100vh;
             text-align: center;
             position: relative;
             overflow: hidden;
