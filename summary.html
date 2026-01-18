@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統合分析レポート - マッチングアプリ写真撮影サービス</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #e0e0e0; min-height: 100vh; padding: 20px; line-height: 1.8; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back-link { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.1); border: 1px solid #fff; border-radius: 25px; color: #fff; text-decoration: none; margin-bottom: 20px; }
+        .back-link:hover { background: rgba(255,255,255,0.2); }
+        h1 { font-size: 2rem; margin-bottom: 10px; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 15px; }
+        .meta { color: #888; margin-bottom: 30px; }
+        h2 { font-size: 1.4rem; color: #10ac84; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        h3 { font-size: 1.1rem; color: #feca57; margin: 25px 0 15px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #888; font-weight: 500; background: rgba(0,0,0,0.2); }
+        .price { color: #48dbfb; font-weight: 600; }
+        ul, ol { margin: 15px 0; padding-left: 25px; }
+        li { margin: 8px 0; }
+        strong { color: #fff; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .highlight { background: rgba(16, 172, 132, 0.1); border-left: 4px solid #10ac84; padding: 15px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+        .highlight.warning { background: rgba(255, 107, 107, 0.1); border-left-color: #ff6b6b; }
+        .highlight.info { background: rgba(72, 219, 251, 0.1); border-left-color: #48dbfb; }
+        hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0; }
+        a { color: #48dbfb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="summary_dashboard.html" class="back-link">← ダッシュボードに戻る</a>
+        <h1>📊 統合分析レポート</h1>
+        <p class="meta">調査日: 2026年1月18日 | 6チャネル統合分析</p>
+
+        <h2>1. ニーズ・ウォンツの整理</h2>
+
+        <h3>顕在ニーズ（言語化されている）</h3>
+        <table>
+            <tr><th>カテゴリ</th><th>ニーズ</th><th>深刻度</th><th>市場規模感</th></tr>
+            <tr><td>写真がない</td><td>「他撮り写真がない」「撮ってくれる友達がいない」</td><td>★★★★★</td><td>男性の9割</td></tr>
+            <tr><td>いいねが来ない</td><td>「マッチしない」「写真を変えたい」</td><td>★★★★★</td><td>男性の8割</td></tr>
+            <tr><td>自撮りがダメ</td><td>「男の自撮りはキモいと言われる」</td><td>★★★★☆</td><td>男性全般</td></tr>
+        </table>
+
+        <h3>潜在ニーズ（まだ気づいていない）</h3>
+        <div class="card">
+            <ul>
+                <li><strong>友達代行:</strong> 「友達に撮ってもらった風」の自然な写真</li>
+                <li><strong>セルフ撮影サポート:</strong> 自分で撮るコツを教えてほしい</li>
+                <li><strong>写真診断のみ:</strong> 撮影なしでアドバイスだけほしい</li>
+                <li><strong>匿名性:</strong> サービス利用がバレたくない</li>
+            </ul>
+        </div>
+
+        <h3>ペインポイント（最大の障壁）TOP5</h3>
+        <div class="highlight warning">
+            <ol>
+                <li><strong>恥ずかしさ</strong> ★★★★★ - 撮影行為への抵抗、目的を知られることへの抵抗</li>
+                <li><strong>費用（高い）</strong> ★★★★☆ - 最安でも7,700円〜は高い</li>
+                <li><strong>バレる恐怖</strong> ★★★★☆ - マッチングアプリを使っていることを知られたくない</li>
+                <li><strong>プロ感への懸念</strong> ★★★☆☆ - 「広告みたいな写真になるのが嫌」</li>
+                <li><strong>効果への疑問</strong> ★★★☆☆ - 「高いお金を払っても100%効果があるわけではない」</li>
+            </ol>
+        </div>
+
+        <h2>2. ターゲットセグメント</h2>
+
+        <h3>【最優先ターゲット】30代男性・婚活層</h3>
+        <div class="card">
+            <table>
+                <tr><th>項目</th><th>詳細</th></tr>
+                <tr><td>年齢</td><td>30〜39歳</td></tr>
+                <tr><td>状況</td><td>マッチングアプリで苦戦中、いいねが来ない</td></tr>
+                <tr><td>収入</td><td>年収400〜700万円（投資可能）</td></tr>
+                <tr><td>心理</td><td>「このままではマズい」という焦り</td></tr>
+            </table>
+            <p><strong>なぜこの層か？</strong> 写真の重要性を痛感 / 投資できる経済力 / 時間がない / 真剣度が高い</p>
+        </div>
+
+        <h2>3. 競合との差別化ポイント</h2>
+        <div class="highlight info">
+            <h3>空いているポジション（攻める方向）</h3>
+            <ul>
+                <li><strong>価格:</strong> 最安7,700円 → 3,000〜5,000円の「お試し」枠</li>
+                <li><strong>雰囲気:</strong> プロ感が強い → 「友達代行」コンセプト</li>
+                <li><strong>ターゲット:</strong> 汎用的 → 「30代男性婚活」特化</li>
+                <li><strong>撮影機材:</strong> 一眼レフ → あえてスマホ撮影</li>
+                <li><strong>付加価値:</strong> 撮影のみ → 撮影＋プロフ添削＋恋愛相談</li>
+            </ul>
+        </div>
+
+        <h2>4. 価格戦略（松竹梅）</h2>
+        <table>
+            <tr><th>プラン</th><th>価格</th><th>選択率予測</th><th>戦略的意図</th></tr>
+            <tr><td><strong>松</strong>（プレミアム）</td><td class="price">¥18,000</td><td>20%</td><td>アンカー効果、高収益</td></tr>
+            <tr><td><strong>竹</strong>（スタンダード）</td><td class="price">¥10,000</td><td><strong>50%</strong></td><td>メイン収益源</td></tr>
+            <tr><td><strong>梅</strong>（お試し）</td><td class="price">¥4,500</td><td>30%</td><td>集客、リピート促進</td></tr>
+        </table>
+
+        <h2>5. マーケティング戦略</h2>
+        <h3>優先チャネル</h3>
+        <table>
+            <tr><th>優先度</th><th>チャネル</th><th>施策</th></tr>
+            <tr><td>◎</td><td>タイムチケット</td><td>出品＆実績積み（即効性◎）</td></tr>
+            <tr><td>◎</td><td>Twitter/X</td><td>作例投稿、Before/After（バイラル狙い）</td></tr>
+            <tr><td>○</td><td>Instagram</td><td>作品投稿（ブランディング）</td></tr>
+            <tr><td>○</td><td>YouTube</td><td>撮影ノウハウ動画（長期的な信頼構築）</td></tr>
+        </table>
+
+        <h3>訴求メッセージ案</h3>
+        <div class="card">
+            <ul>
+                <li><strong>友達代行型:</strong> 「友達に撮ってもらった」ような自然な写真で、いいね数を3倍に</li>
+                <li><strong>悩み解決型:</strong> 「写真がない」「撮ってくれる人がいない」その悩み、解決します。</li>
+                <li><strong>成果訴求型:</strong> 撮影後2週間でいいね数が平均2.5倍に。30代男性専門。</li>
+                <li><strong>恥ずかしさ解消型:</strong> 「マッチングアプリ用」と言わなくてOK。SNS用プロフィール撮影。</li>
+            </ul>
+        </div>
+
+        <h2>6. 実行アクションプラン</h2>
+
+        <h3>Phase 1: 準備期（1〜2週間）</h3>
+        <div class="highlight">
+            <ul>
+                <li>ポートフォリオ作成（友人知人に頼んで10件以上の作例を撮影）</li>
+                <li>タイムチケット出品（「梅プラン」¥4,500でまず出品）</li>
+                <li>SNSアカウント開設（Twitter/Instagram専用アカウント作成）</li>
+            </ul>
+        </div>
+
+        <h3>Phase 2: 実績構築期（1〜2ヶ月）</h3>
+        <div class="highlight">
+            <ul>
+                <li>初回割引キャンペーン（先着10名¥3,000で実績作り）</li>
+                <li>レビュー依頼（撮影後にレビューをお願い、★4.8以上維持）</li>
+                <li>SNS毎日投稿（Before/After、ノウハウ投稿）</li>
+            </ul>
+            <p><strong>目標:</strong> 月売上10万円</p>
+        </div>
+
+        <h3>Phase 3: 拡大期（3〜6ヶ月）</h3>
+        <div class="highlight">
+            <ul>
+                <li>価格改定（実績を元に正規価格へ移行、竹プラン¥10,000）</li>
+                <li>松プラン追加（高単価プランの導入）</li>
+                <li>紹介制度開始（紹介者・被紹介者に割引）</li>
+            </ul>
+            <p><strong>目標:</strong> 月売上30万円</p>
+        </div>
+
+        <h2>7. 今日から始められる5つのアクション</h2>
+        <div class="card" style="background: rgba(16, 172, 132, 0.1); border-color: #10ac84;">
+            <ol>
+                <li><strong>タイムチケットに会員登録する</strong>（無料・10分）</li>
+                <li><strong>友人3人に「写真撮らせて」とお願いする</strong> → ポートフォリオ用の作例を確保</li>
+                <li><strong>Twitter専用アカウントを作成する</strong> → @[名前]_photo のような分かりやすいID</li>
+                <li><strong>競合のタイムチケット出品を10件分析する</strong> → 人気の理由、レビュー傾向を把握</li>
+                <li><strong>最初の出品文を書いてみる</strong> → タイトル、説明文、価格を決める</li>
+            </ol>
+        </div>
+
+        <hr>
+        <p style="text-align: center; color: #666;">
+            調査ファイル:
+            <a href="01_coconala.html">ココナラ</a> |
+            <a href="02_timeticket.html">タイムチケット</a> |
+            <a href="03_twitter.html">Twitter/X</a> |
+            <a href="04_youtube.html">YouTube</a> |
+            <a href="06_google_ads.html">Google広告</a>
+        </p>
+    </div>
+</body>
+</html>

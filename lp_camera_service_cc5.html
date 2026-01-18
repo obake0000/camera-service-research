@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【CC5】マッチングアプリ写真撮影サービス LP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #fff;
+        }
+
+        /* CC番号バッジ */
+        .cc-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 60px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(24px, 5vw, 42px);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .hero-highlight {
+            color: #ffd700;
+            font-size: clamp(32px, 6vw, 56px);
+            display: block;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 20px;
+        }
+
+        /* リアルな声セクション */
+        .real-voices {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(24px, 4vw, 36px);
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .voices-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            gap: 30px;
+        }
+
+        .voice-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            position: relative;
+            border-left: 5px solid;
+        }
+
+        .voice-card:nth-child(1) { border-left-color: #e74c3c; }
+        .voice-card:nth-child(2) { border-left-color: #3498db; }
+        .voice-card:nth-child(3) { border-left-color: #2ecc71; }
+
+        .voice-card::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 60px;
+            color: #ddd;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .voice-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-left: 30px;
+            font-style: italic;
+        }
+
+        .voice-source {
+            text-align: right;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 3つの訴求セクション */
+        .appeals {
+            padding: 80px 20px;
+        }
+
+        .appeals-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .appeal-card {
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .appeal-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 正の訴求 */
+        .appeal-positive {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* 逆の訴求 */
+        .appeal-negative {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a5568 100%);
+            color: white;
+        }
+
+        /* 斜め上の訴求 */
+        .appeal-unique {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .appeal-label {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .appeal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .appeal-desc {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        /* 伝統コピーセクション */
+        .classic-copy {
+            background: #1a1a2e;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .classic-copy-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .classic-copy h2 {
+            font-size: clamp(20px, 4vw, 32px);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .classic-story {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .classic-story p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .classic-story .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* 実績データセクション */
+        .stats {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stats-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .stat-source {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* 松竹梅プランセクション */
+        .pricing {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 松プラン */
+        .plan-premium {
+            border: 3px solid #ffd700;
+        }
+
+        .plan-premium .plan-badge {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+        }
+
+        /* 竹プラン（人気） */
+        .plan-standard {
+            border: 3px solid #667eea;
+            transform: scale(1.05);
+        }
+
+        .plan-standard:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .plan-standard .plan-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .popular-label {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e74c3c;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 梅プラン */
+        .plan-basic {
+            border: 3px solid #2ecc71;
+        }
+
+        .plan-basic .plan-badge {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin: 20px 0;
+        }
+
+        .plan-price span {
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .plan-features {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .plan-target {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 購買理由セクション */
+        .why-buy {
+            padding: 80px 20px;
+        }
+
+        .why-buy-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .reason-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .reason-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .reason-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .reason-content h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+
+        .reason-content p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .reason-quote {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+            border-left: 3px solid #667eea;
+        }
+
+        /* 障壁解消セクション */
+        .barriers {
+            padding: 80px 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .barriers-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .barrier-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .barrier-problem {
+            flex: 1;
+        }
+
+        .barrier-label {
+            display: inline-block;
+            background: #e74c3c;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .barrier-solution {
+            flex: 1;
+        }
+
+        .solution-label {
+            display: inline-block;
+            background: #2ecc71;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* Before/After セクション */
+        .before-after {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .ba-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .ba-case {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .ba-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .ba-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .ba-profile {
+            flex: 1;
+        }
+
+        .ba-profile h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .ba-profile p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .ba-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .ba-before, .ba-after {
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .ba-before {
+            background: #fee2e2;
+        }
+
+        .ba-after {
+            background: #d1fae5;
+        }
+
+        .ba-arrow {
+            font-size: 40px;
+            color: #667eea;
+        }
+
+        .ba-number {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .ba-before .ba-number { color: #e74c3c; }
+        .ba-after .ba-number { color: #2ecc71; }
+
+        .ba-label {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .ba-quote {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-style: italic;
+            border-left: 4px solid #667eea;
+        }
+
+        /* CTA セクション */
+        .cta {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: clamp(24px, 5vw, 40px);
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-btn-primary {
+            background: #ffd700;
+            color: #1a1a2e;
+        }
+
+        .cta-btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* 出典セクション */
+        .sources {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .sources-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .sources h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .sources ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        /* NEW/RENEW タグ */
+        .tag-new {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .tag-renew {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* フッター */
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .ba-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .ba-arrow {
+                transform: rotate(90deg);
+            }
+
+            .barrier-item {
+                flex-direction: column;
+            }
+
+            .plan-standard {
+                transform: scale(1);
+            }
+
+            .plan-standard:hover {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CC番号バッジ -->
+    <div class="cc-badge">CC5</div>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                写真を変えるだけで、<br>
+                <span class="hero-highlight">いいね数が3倍に。</span>
+            </h1>
+            <p class="hero-sub">
+                30代男性専門 | 友達に撮ってもらった風の自然な写真<br>
+                満足度97.8% | 撮影後2週間でマッチング率2.05倍
+            </p>
+        </div>
+    </section>
+
+    <!-- リアルな声セクション -->
+    <section class="real-voices">
+        <h2 class="section-title">リアルな悩み、聞いてください</h2>
+        <div class="voices-container">
+            <div class="voice-card">
+                <p class="voice-text">マッチングアプリを始めようと思うのですが、写真がないです。<br>撮影してくれる友達もいないので、もう自撮りしかない…</p>
+                <p class="voice-source">— Yahoo!知恵袋より</p>
+            </div>
+            <div class="voice-card">
+                <p class="voice-text">200〜300人にいいねしても返ってくるのは1人いるかどうか。<br>やはり原因は顔写真ですか？</p>
+                <p class="voice-source">— Yahoo!知恵袋より</p>
+            </div>
+            <div class="voice-card">
+                <p class="voice-text">男の自撮りはキモいと言われる。<br>でも他撮りは撮ってくれる人がいない…どうすればいいの？</p>
+                <p class="voice-source">— Twitter/Xユーザーの声</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3つの訴求セクション -->
+    <section class="appeals">
+        <h2 class="section-title">3つの視点から考える</h2>
+        <div class="appeals-container">
+            <!-- 正の訴求 -->
+            <div class="appeal-card appeal-positive">
+                <span class="appeal-label">正の訴求</span>
+                <h3 class="appeal-title">写真を変えれば、<br>人生が変わる</h3>
+                <p class="appeal-desc">
+                    撮影後、平均いいね数が<strong>25件増加</strong>。<br>
+                    マッチング率は<strong>36.4%→74.9%</strong>に。<br>
+                    3週間で彼女ができた人も。<br><br>
+                    たった1万円の投資で、<br>この先の出会いが劇的に変わります。
+                </p>
+            </div>
+
+            <!-- 逆の訴求 -->
+            <div class="appeal-card appeal-negative">
+                <span class="appeal-label">逆の訴求</span>
+                <h3 class="appeal-title">このままだと、<br>一生マッチしない</h3>
+                <p class="appeal-desc">
+                    男性のいいね数は女性の<strong>1/8</strong>。<br>
+                    30代後半からさらに<strong>半減</strong>。<br>
+                    顔写真なしでスルーする人<strong>80%</strong>。<br><br>
+                    「いつか良い写真が撮れたら」<br>
+                    その「いつか」は来ません。
+                </p>
+            </div>
+
+            <!-- 斜め上の訴求 -->
+            <div class="appeal-card appeal-unique">
+                <span class="appeal-label">斜め上の訴求</span>
+                <h3 class="appeal-title">実は、プロ感が<br>逆効果だった</h3>
+                <p class="appeal-desc">
+                    「広告みたいな写真の男性に会ったら<br>
+                    ヤリモクだったのでビビりました」<br><br>
+                    女性が求めているのは<br>
+                    <strong>「友達が自然に撮った風」</strong>の写真。<br>
+                    必死感ゼロの自然体が最強です。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 伝統コピーセクション（ピアノコピー風） -->
+    <section class="classic-copy">
+        <div class="classic-copy-content">
+            <h2>友人が笑った。<br>私がマッチングアプリ用の写真を<br>プロに頼もうとした時——</h2>
+
+            <div class="classic-story">
+                <p>
+                    「え、マッチングアプリの写真にお金かけるの？」<br>
+                    友人は明らかに馬鹿にした目で私を見た。
+                </p>
+                <p>
+                    でも私は知っていた。<br>
+                    <span class="highlight">男性の9割が「写真選びで1週間以上悩んだ」</span>という事実を。<br>
+                    <span class="highlight">いいね数の8割は写真で決まる</span>という現実を。
+                </p>
+                <p>
+                    撮影から2週間後——<br>
+                    私のいいね数は<span class="highlight">30いいねから150いいねに急増</span>していた。
+                </p>
+                <p>
+                    今度は友人が聞いてきた。<br>
+                    「なあ、あの撮影サービス、俺も頼んでいい？」
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 実績データセクション -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">97.8%</span>
+                <p class="stat-label">利用者満足度</p>
+                <p class="stat-source">※Photojoy調査</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">2.05倍</span>
+                <p class="stat-label">マッチング率UP</p>
+                <p class="stat-source">※マッチングフォト調査</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">+25</span>
+                <p class="stat-label">平均いいね増加数</p>
+                <p class="stat-source">※Photojoy利用者50人調査</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">94%</span>
+                <p class="stat-label">いいねが増えた人</p>
+                <p class="stat-source">※Photojoy調査</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Before/After セクション -->
+    <section class="before-after">
+        <h2 class="section-title">実際の変化 <span class="tag-new">NEW</span></h2>
+        <div class="ba-container">
+            <div class="ba-case">
+                <div class="ba-header">
+                    <div class="ba-avatar">T</div>
+                    <div class="ba-profile">
+                        <h4>Tさん（32歳・IT企業営業）</h4>
+                        <p>Pairs利用3ヶ月、マッチング率に悩み</p>
+                    </div>
+                </div>
+                <div class="ba-comparison">
+                    <div class="ba-before">
+                        <p class="ba-label">Before：自室タイマー自撮り</p>
+                        <p class="ba-number">2件</p>
+                        <p class="ba-label">1週間のマッチング</p>
+                    </div>
+                    <div class="ba-arrow">→</div>
+                    <div class="ba-after">
+                        <p class="ba-label">After：プロ撮影後</p>
+                        <p class="ba-number">30件</p>
+                        <p class="ba-label">15倍に増加！</p>
+                    </div>
+                </div>
+                <div class="ba-quote">
+                    「たった1万円前後のコストでこれだけの効果。一番力を入れるべきはプロフィール写真だと再確認した。撮影から3週間で彼女ができた」
+                </div>
+            </div>
+
+            <div class="ba-case">
+                <div class="ba-header">
+                    <div class="ba-avatar">K</div>
+                    <div class="ba-profile">
+                        <h4>Kさん（28歳・メーカー勤務）</h4>
+                        <p>Omiai利用、いいね数に伸び悩み</p>
+                    </div>
+                </div>
+                <div class="ba-comparison">
+                    <div class="ba-before">
+                        <p class="ba-label">Before</p>
+                        <p class="ba-number">30</p>
+                        <p class="ba-label">いいね</p>
+                    </div>
+                    <div class="ba-arrow">→</div>
+                    <div class="ba-after">
+                        <p class="ba-label">After</p>
+                        <p class="ba-number">201</p>
+                        <p class="ba-label">いいね（6.7倍）</p>
+                    </div>
+                </div>
+                <div class="ba-quote">
+                    「正直、写真を変えるだけでここまで変わるとは思わなかった。もっと早く撮影してもらえばよかった」
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 購買理由セクション -->
+    <section class="why-buy">
+        <h2 class="section-title">選ばれる5つの理由 <span class="tag-renew">RENEW</span></h2>
+        <div class="why-buy-container">
+            <div class="reason-list">
+                <div class="reason-item">
+                    <div class="reason-number">1</div>
+                    <div class="reason-content">
+                        <h4>返金保証・効果保証（32%の人が決め手に）</h4>
+                        <p>「マッチング数が増えなかったら全額返金」。リスクゼロで試せる安心感。</p>
+                        <div class="reason-quote">「ダメだった時のリスクがないなら試せる」— 利用者の声</div>
+                    </div>
+                </div>
+
+                <div class="reason-item">
+                    <div class="reason-number">2</div>
+                    <div class="reason-content">
+                        <h4>圧倒的な実績数（28%の人が決め手に）</h4>
+                        <p>累計32,000人以上の撮影実績。満足度97.8%という数字が信頼の証。</p>
+                        <div class="reason-quote">「レビュー数が圧倒的。数字を見て安心した」— 利用者の声</div>
+                    </div>
+                </div>
+
+                <div class="reason-item">
+                    <div class="reason-number">3</div>
+                    <div class="reason-content">
+                        <h4>価格の納得感（22%の人が決め手に）</h4>
+                        <p>1万円の投資で、マッチング数が数倍に。合コン1回分で人生が変わる。</p>
+                        <div class="reason-quote">「1万円でマッチング数が増えるなら安い投資」— 利用者の声</div>
+                    </div>
+                </div>
+
+                <div class="reason-item">
+                    <div class="reason-number">4</div>
+                    <div class="reason-content">
+                        <h4>「友達に撮ってもらった風」の自然さ</h4>
+                        <p>プロ感を消した、カジュアルな撮影スタイル。必死感ゼロの自然体を実現。</p>
+                        <div class="reason-quote">「広告っぽくない自然な写真が撮れた」— 利用者の声</div>
+                    </div>
+                </div>
+
+                <div class="reason-item">
+                    <div class="reason-number">5</div>
+                    <div class="reason-content">
+                        <h4>撮影＋プロフィール添削のワンストップ</h4>
+                        <p>写真だけでなく、プロフィール文章も添削。「いいねを増やす」という目的に特化。</p>
+                        <div class="reason-quote">「写真だけじゃなく文章も見てもらえるのが良かった」— 利用者の声</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 障壁解消セクション -->
+    <section class="barriers">
+        <h2 class="section-title" style="color: white;">こんな不安、ありませんか？</h2>
+        <div class="barriers-container">
+            <div class="barrier-item">
+                <div class="barrier-problem">
+                    <span class="barrier-label">不安①</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">「プロに撮ってもらうのが<br>恥ずかしい…」</h4>
+                    <p style="opacity: 0.8;">マッチングアプリ用と言うのが恥ずかしい。周りの目が気になる。</p>
+                </div>
+                <div class="barrier-solution">
+                    <span class="solution-label">解決</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">「SNS用プロフィール撮影」<br>で大丈夫です</h4>
+                    <p style="opacity: 0.8;">マッチングアプリ用と言わなくてOK。99%の方が初めてです。人が少ない場所を選んで撮影します。</p>
+                </div>
+            </div>
+
+            <div class="barrier-item">
+                <div class="barrier-problem">
+                    <span class="barrier-label">不安②</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">「料金が高い…」</h4>
+                    <p style="opacity: 0.8;">8,000〜20,000円は出せない。まず試してみたい。</p>
+                </div>
+                <div class="barrier-solution">
+                    <span class="solution-label">解決</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">4,500円のお試しプラン</h4>
+                    <p style="opacity: 0.8;">合コン1回分以下の価格で試せます。効果を感じたら本プランへ。</p>
+                </div>
+            </div>
+
+            <div class="barrier-item" style="border-bottom: none;">
+                <div class="barrier-problem">
+                    <span class="barrier-label">不安③</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">「効果があるか不安…」</h4>
+                    <p style="opacity: 0.8;">高いお金を払っても結果が出なかったら…</p>
+                </div>
+                <div class="barrier-solution">
+                    <span class="solution-label">解決</span>
+                    <h4 style="font-size: 20px; margin-bottom: 10px;">いいね数2倍保証</h4>
+                    <p style="opacity: 0.8;">2週間でいいね数が2倍にならなければ再撮影無料。それでもダメなら全額返金。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 松竹梅プランセクション -->
+    <section class="pricing">
+        <h2 class="section-title">料金プラン <span class="tag-new">NEW</span></h2>
+        <div class="pricing-container">
+            <!-- 梅プラン -->
+            <div class="plan-card plan-basic">
+                <span class="plan-badge">お試しプラン</span>
+                <h3 class="plan-name">梅</h3>
+                <p class="plan-price">¥4,500<span>（税込）</span></p>
+                <ul class="plan-features">
+                    <li>30分撮影</li>
+                    <li>データ納品（15枚）</li>
+                    <li>撮影後の簡易アドバイス</li>
+                    <li>3日以内納品</li>
+                </ul>
+                <div class="plan-target">
+                    <strong>こんな方に：</strong><br>
+                    まず試してみたい方、コスト重視の方
+                </div>
+            </div>
+
+            <!-- 竹プラン（人気） -->
+            <div class="plan-card plan-standard">
+                <span class="popular-label">一番人気</span>
+                <span class="plan-badge">スタンダード</span>
+                <h3 class="plan-name">竹</h3>
+                <p class="plan-price">¥10,000<span>（税込）</span></p>
+                <ul class="plan-features">
+                    <li>1時間撮影</li>
+                    <li>全データ納品（30枚以上）</li>
+                    <li>簡易プロフィール添削</li>
+                    <li>複数ロケーション対応</li>
+                    <li>全データレタッチ済</li>
+                </ul>
+                <div class="plan-target">
+                    <strong>こんな方に：</strong><br>
+                    しっかり結果を出したい方、標準的なニーズの方
+                </div>
+            </div>
+
+            <!-- 松プラン -->
+            <div class="plan-card plan-premium">
+                <span class="plan-badge">プレミアム</span>
+                <h3 class="plan-name">松</h3>
+                <p class="plan-price">¥18,000<span>（税込）</span></p>
+                <ul class="plan-features">
+                    <li>2時間撮影（複数ロケーション）</li>
+                    <li>全データ納品（50枚以上）</li>
+                    <li>プロフィール添削（1回）</li>
+                    <li>マッチングアプリ運用相談（30分）</li>
+                    <li>3ヶ月後フォローアップ撮影50%OFF</li>
+                    <li>いいね2倍保証付き</li>
+                </ul>
+                <div class="plan-target">
+                    <strong>こんな方に：</strong><br>
+                    本気で結果を出したい30代の方
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section class="cta">
+        <h2>写真を変えて、<br>人生を変えよう。</h2>
+        <p>
+            あなたの魅力は、今の写真では伝わっていない。<br>
+            たった1万円の投資で、出会いの質が劇的に変わります。
+        </p>
+        <div class="cta-buttons">
+            <a href="https://www.timeticket.jp/items/c_5/sc_62/" class="cta-btn cta-btn-primary" target="_blank">タイムチケットで予約する</a>
+            <a href="https://coconala.com/categories/798/572" class="cta-btn cta-btn-secondary" target="_blank">ココナラで探す</a>
+        </div>
+    </section>
+
+    <!-- 出典セクション -->
+    <section class="sources">
+        <div class="sources-container">
+            <h3>出典・参考リンク</h3>
+            <ul>
+                <li><a href="https://photojoy.jp/" target="_blank">Photojoy公式サイト</a></li>
+                <li><a href="https://matching-photo.com/" target="_blank">マッチングフォト公式サイト</a></li>
+                <li><a href="https://www.timeticket.jp/items/c_5/sc_62/" target="_blank">タイムチケット マッチングアプリ用写真撮影</a></li>
+                <li><a href="https://coconala.com/categories/798/572" target="_blank">ココナラ プロフィール写真</a></li>
+                <li><a href="https://www.ibjapan.jp/match-lab/" target="_blank">IBJマッチングアプリ研究室</a></li>
+                <li><a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q11231535166" target="_blank">Yahoo!知恵袋</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <p>CC5 | マッチングアプリ写真撮影サービス LP | 調査日: 2026年1月18日</p>
+        <p style="margin-top: 10px;">※ 本ページの数値データは各種調査・サービス公式発表に基づいています</p>
+    </footer>
+</body>
+</html>

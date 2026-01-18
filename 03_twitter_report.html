@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CC3: マッチングアプリ写真 ビジネス戦略レポート【RENEW】</title>
+    <style>
+        :root {
+            --primary: #1DA1F2;
+            --secondary: #14171A;
+            --accent: #FF6B6B;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --bg-light: #F5F8FA;
+            --text-dark: #14171A;
+            --text-light: #657786;
+            --new-badge: #E91E63;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .cc-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), #0d8ed6);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 4px 20px rgba(29, 161, 242, 0.5);
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .new-tag {
+            background: var(--new-badge);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section.lp-focus {
+            border: 3px solid var(--success);
+            background: linear-gradient(135deg, #f0fff4 0%, white 100%);
+        }
+
+        .section.content-focus {
+            border: 3px solid var(--primary);
+            background: linear-gradient(135deg, #f0f8ff 0%, white 100%);
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .label-lp {
+            background: var(--success);
+            color: white;
+        }
+
+        .label-content {
+            background: var(--primary);
+            color: white;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section-title h2 {
+            font-size: 1.8em;
+            color: var(--secondary);
+        }
+
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* フィードバック機能 */
+        .feedback-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .feedback-btn {
+            padding: 8px 16px;
+            border: 2px solid;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .feedback-btn.need-more {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .feedback-btn.need-more:hover,
+        .feedback-btn.need-more.selected {
+            background: var(--success);
+            color: white;
+        }
+
+        .feedback-btn.not-needed {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        .feedback-btn.not-needed:hover,
+        .feedback-btn.not-needed.selected {
+            background: var(--text-light);
+            color: white;
+        }
+
+        .feedback-btn.improve {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .feedback-btn.improve:hover,
+        .feedback-btn.improve.selected {
+            background: var(--warning);
+            color: white;
+        }
+
+        .feedback-input {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .feedback-input.show {
+            display: block;
+        }
+
+        .feedback-input textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--warning);
+            border-radius: 10px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* 統計カード */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #0d8ed6);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, var(--accent), #ff4757);
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, var(--success), #2ed573);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* 証拠ボックス NEW */
+        .evidence-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff 100%);
+            border: 2px solid #fbc02d;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .evidence-box::before {
+            content: '証拠データ';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #fbc02d;
+            color: #333;
+            padding: 3px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .evidence-box h4 {
+            color: #f57f17;
+            margin-bottom: 15px;
+        }
+
+        /* 解決策カード NEW */
+        .solution-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, white 100%);
+            border-left: 5px solid var(--success);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 0 15px 15px 0;
+            position: relative;
+        }
+
+        .solution-card::before {
+            content: '解決策';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--success);
+            color: white;
+            padding: 3px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .solution-card h4 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+
+        /* 比較テーブル */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        /* ビジネス示唆 NEW深堀り版 */
+        .deep-insight {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deep-insight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(29,161,242,0.3) 0%, transparent 70%);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .insight-number {
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .deep-insight h3 {
+            font-size: 1.5em;
+            color: #4fc3f7;
+        }
+
+        .insight-why {
+            background: rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .insight-why h5 {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .insight-how {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .insight-how h5 {
+            color: #81c784;
+            margin-bottom: 10px;
+        }
+
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .action-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .action-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* 市場データ NEW */
+        .market-data {
+            background: linear-gradient(135deg, #e3f2fd 0%, white 100%);
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .market-data h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* コンテンツ用セクション */
+        .content-idea {
+            background: var(--bg-light);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .content-idea h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* リンク */
+        .source-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 3px;
+            transition: all 0.3s;
+        }
+
+        .source-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* コピー用サマリー */
+        .copy-summary {
+            background: #f8f9fa;
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .copy-summary h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #0d8ed6;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        /* 分離図 */
+        .strategy-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .strategy-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .split-card {
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .split-card.lp {
+            background: linear-gradient(135deg, #c8e6c9 0%, #e8f5e9 100%);
+            border: 2px solid var(--success);
+        }
+
+        .split-card.content {
+            background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%);
+            border: 2px solid var(--primary);
+        }
+
+        .split-card h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .split-card.lp h3 {
+            color: #2e7d32;
+        }
+
+        .split-card.content h3 {
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="cc-badge">CC3</div>
+
+    <div class="container">
+        <header>
+            <h1>マッチングアプリ写真 ビジネス戦略レポート <span class="new-tag">RENEW</span></h1>
+            <p>LP訴求ポイント × コンテンツマーケティング 戦略分離版</p>
+        </header>
+
+        <!-- LP訴求 vs コンテンツ 分離図 -->
+        <section class="section">
+            <div class="section-title">
+                <div class="section-number">★</div>
+                <h2>戦略の分離：LP訴求 vs コンテンツ配信 <span class="new-tag">NEW</span></h2>
+            </div>
+
+            <div class="strategy-split">
+                <div class="split-card lp">
+                    <h3>LP訴求（コンバージョン獲得）</h3>
+                    <p><strong>目的：</strong>申込・購入に直結</p>
+                    <ul>
+                        <li>解決策の証拠データを提示</li>
+                        <li>成功事例・ビフォーアフター</li>
+                        <li>心理的障壁の解消</li>
+                        <li>具体的なメリット（数値）</li>
+                        <li>返金保証・安心材料</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #2e7d32; font-weight: bold;">→ 下記「LP訴求ポイント」セクション</p>
+                </div>
+                <div class="split-card content">
+                    <h3>コンテンツ配信（認知・共感）</h3>
+                    <p><strong>目的：</strong>ファン化・信頼構築</p>
+                    <ul>
+                        <li>「あるある」共感コンテンツ</li>
+                        <li>男女別の悩み紹介</li>
+                        <li>ユーザーの不満・愚痴</li>
+                        <li>Tips・撮り方のコツ</li>
+                        <li>業界トレンド情報</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #1565c0; font-weight: bold;">→ 下記「コンテンツネタ」セクション</p>
+                </div>
+            </div>
+
+            <div class="feedback-container" data-section="strategy">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'strategy', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'strategy', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'strategy', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-strategy">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- LP訴求ポイント①: 自然な写真 DEEP -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">1</div>
+                <h2>「広告っぽくない自然な写真」の証拠 <span class="new-tag">DEEP</span></h2>
+            </div>
+
+            <p style="margin-bottom: 20px; background: #fff3e0; padding: 15px; border-radius: 10px; border-left: 4px solid #ff9800;">
+                <strong>【現実と理想の兼ね合い】</strong><br>
+                「自然な写真」が良いのは事実だが、<strong>加工しすぎると会った時にガッカリされる</strong>という現実がある。
+                「バレない程度」の自然な加工が正解。
+            </p>
+
+            <div class="evidence-box">
+                <h4>効果を証明するデータ</h4>
+                <table class="comparison-table">
+                    <tr>
+                        <th>指標</th>
+                        <th>数値</th>
+                        <th>出典</th>
+                    </tr>
+                    <tr>
+                        <td>写真の質UP後のマッチング率</td>
+                        <td><strong>74.9%</strong>（通常36.4%→2.05倍）</td>
+                        <td>マッチングフォト</td>
+                    </tr>
+                    <tr>
+                        <td>いいね増加（Photojoy利用者50人調査）</td>
+                        <td><strong>平均+25いいね</strong>（ほぼ倍増）</td>
+                        <td>独自アンケート</td>
+                    </tr>
+                    <tr>
+                        <td>写真詐欺で会ってガッカリした経験</td>
+                        <td><strong>約4人に1人</strong></td>
+                        <td>マッチングアプリ利用者調査</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- RENEW: 逆転の視点 -->
+            <div class="deep-insight" style="margin-top: 25px;">
+                <div class="insight-header">
+                    <div class="insight-number">!</div>
+                    <h3>「会った時にガッカリ」→ 逆転の発想 <span class="new-tag">RENEW</span></h3>
+                </div>
+                <div class="insight-why">
+                    <h5>一般論：ガッカリされるからダメ</h5>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                        <p style="color: #ffcdd2;">「写真と違う」と言われたくない → 控えめに盛る → そこそこの成果</p>
+                    </div>
+                </div>
+                <div class="insight-how">
+                    <h5 style="color: #81c784;">実務の視点：むしろ最大限盛るべき</h5>
+                    <div style="background: rgba(76, 175, 80, 0.2); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                        <p><strong>理由：</strong>ガッカリされないと、本気でルックス改善しようと思わないから</p>
+                        <p style="margin-top: 10px;">「写真の自分」に近づく努力 → 実際のルックスUP → 結果的に一致</p>
+                    </div>
+                    <ul class="action-list" style="margin-top: 15px;">
+                        <li>最大限盛った写真でマッチング数を稼ぐ</li>
+                        <li>実際に会ってガッカリされる経験をする</li>
+                        <li>「このままじゃダメだ」と本気でルックス改善に取り組む</li>
+                        <li>結果的に写真と実物のギャップが縮まる</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="solution-card" style="margin-top: 25px;">
+                <h4>【実務観点】撮影サービスとしてのスタンス</h4>
+                <ul style="margin-top: 10px;">
+                    <li><strong>写真は「ゴール」ではなく「スタートライン」：</strong>まずマッチングしないと何も始まらない</li>
+                    <li><strong>「会った時にガッカリ」は成長機会：</strong>写真に追いつく努力のモチベーションになる</li>
+                    <li><strong>iPhone撮影 + アプリ加工：</strong>自然な雰囲気を残しつつ、しっかり盛る</li>
+                    <li><strong>他撮り風で「友達と遊んでる感」：</strong>生活感・リア充感を演出</li>
+                </ul>
+            </div>
+
+            <h4 style="margin-top: 20px; color: var(--success);">LP訴求コピー案（攻めの訴求）</h4>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-top: 10px;">
+                <p>⭕「まずマッチングしないと、何も始まらない」</p>
+                <p>⭕「あなたの"ベストな瞬間"を切り取る撮影」</p>
+                <p>⭕「写真の自分に追いつけ。それが本当の自分磨き」</p>
+                <p>⭕「友達に撮ってもらったような自然体 × しっかり盛る技術」</p>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://dineapp.co.jp/photo/" target="_blank" class="source-link">新しい出会いのすゝめ</a>
+                <a href="https://laskoi.jp/blog/post/xghu1f-5h" target="_blank" class="source-link">写真詐欺の実態</a>
+                <a href="https://meeeet.jp/matching-app-selfie" target="_blank" class="source-link">自撮りNG理由</a>
+            </p>
+
+            <div class="feedback-container" data-section="natural">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'natural', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'natural', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'natural', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-natural">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- LP訴求ポイント②: コスパ DEEP -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">2</div>
+                <h2>「コスパ」の証拠と訴求 <span class="new-tag">DEEP</span></h2>
+            </div>
+
+            <p style="margin-bottom: 20px; background: #fff3e0; padding: 15px; border-radius: 10px; border-left: 4px solid #ff9800;">
+                <strong>【実務メモ】Twitter経由の集客では価格訴求は薄い</strong> <span class="new-tag">RENEW</span><br>
+                タイムチケットのように並び替え・比較されないので、<strong>最安値は一応キープしておく程度</strong>でOK。<br>
+                Twitter→LPの導線では「価格」より「成果」「雰囲気」で訴求した方が効果的。
+            </p>
+
+            <div class="evidence-box">
+                <h4>価格帯の実態（値上げ戦略の参考）</h4>
+                <table class="comparison-table">
+                    <tr>
+                        <th>サービス</th>
+                        <th>料金</th>
+                        <th>レビュー数</th>
+                        <th>ポジション</th>
+                    </tr>
+                    <tr>
+                        <td>タイムチケット最安</td>
+                        <td><strong>¥3,000</strong></td>
+                        <td>〜500件</td>
+                        <td>入口・お試し価格</td>
+                    </tr>
+                    <tr>
+                        <td>タイムチケット中堅</td>
+                        <td><strong>¥5,000</strong></td>
+                        <td>500〜800件</td>
+                        <td>コスパ最強ゾーン</td>
+                    </tr>
+                    <tr>
+                        <td>タイムチケット上位</td>
+                        <td><strong>¥6,500〜7,500</strong></td>
+                        <td>1,000件以上</td>
+                        <td>実績で信頼獲得</td>
+                    </tr>
+                    <tr>
+                        <td>マッチングフォト</td>
+                        <td>¥7,700〜</td>
+                        <td>-</td>
+                        <td><strong>全額返金保証</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Photojoy</td>
+                        <td>¥9,900〜</td>
+                        <td>22,000人実績</td>
+                        <td>ブランド・安心感</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- NEW: 値上げ戦略セクション -->
+            <div class="deep-insight" style="margin-top: 25px;">
+                <div class="insight-header">
+                    <div class="insight-number">$</div>
+                    <h3>「最初安く→値上げ」戦略の具体的ステップ</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>フリーランスカメラマンの値上げタイミング</h5>
+                    <ul class="action-list">
+                        <li><strong>フェーズ1（0〜50件）：</strong>¥3,000〜3,500で実績づくり。「経験を積む」が最優先</li>
+                        <li><strong>フェーズ2（50〜200件）：</strong>¥4,000〜5,000に値上げ。コスパ層を狙う</li>
+                        <li><strong>フェーズ3（200〜500件）：</strong>¥5,000〜6,500に。リピーター・紹介が増える</li>
+                        <li><strong>フェーズ4（500件〜）：</strong>¥7,000以上も可能。「選ばれる理由」が確立</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>値上げの判断基準（業界の声）</h5>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                        <p style="font-style: italic;">「これだけやってこの金額……安すぎるのでは……！？」と<strong>自分で思う時</strong>が来る。最初は不安でも、必ずそういう時が来る</p>
+                        <p style="font-style: italic; margin-top: 10px;">値上げの軸は「自分とお客様のために値上げする」こと。安すぎると質が下がる</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-card" style="margin-top: 25px;">
+                <h4>コスパ訴求の計算ロジック（LP用）</h4>
+                <div style="background: white; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                    <p><strong>アプリ月額との比較で説得：</strong></p>
+                    <p>アプリ月額4,000円 × 12ヶ月 = <strong>48,000円</strong>（写真なしで1年無駄に）</p>
+                    <p>写真10,000円 + アプリ月額 × 6ヶ月 = <strong>34,000円</strong>（半年で成果出せば14,000円お得）</p>
+                    <p style="margin-top: 10px;"><strong>1枚あたりで説得：</strong></p>
+                    <p>7,700円 ÷ 21枚 = <strong>1枚365.7円</strong>（マッチングフォト）</p>
+                    <p style="margin-top: 10px;"><strong>スタジオとの比較：</strong></p>
+                    <p>フォトスタジオ：20,000〜30,000円 → 出張撮影：8,000〜10,000円（<strong>1/3以下</strong>）</p>
+                </div>
+            </div>
+
+            <h4 style="margin-top: 20px; color: var(--success);">LP訴求コピー案</h4>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-top: 10px;">
+                <p>⭕「今なら<strong>お試し価格¥3,000</strong>で撮影体験できます」（入口価格）</p>
+                <p>⭕「アプリを1年使って彼女なし48,000円 vs 写真投資して半年で卒業34,000円」</p>
+                <p>⭕「効果がなければ全額返金。リスクゼロでお試しください」</p>
+                <p>⭕「1枚たったの365円。スマホケースより安い投資で出会いが変わる」</p>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://www.timeticket.jp/items/c_5/sc_62/pr_1/" target="_blank" class="source-link">タイムチケット</a>
+                <a href="https://note.com/palicosp/n/n2647ba7833fc" target="_blank" class="source-link">値上げタイミング</a>
+                <a href="https://shutcho-satsuei.com/price/" target="_blank" class="source-link">出張撮影相場</a>
+            </p>
+
+            <div class="feedback-container" data-section="cost">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'cost', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'cost', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'cost', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-cost">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- LP訴求ポイント③: リラックス誘導 RENEW -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">3</div>
+                <h2>「リラックスして撮れる」の証拠 <span class="new-tag">RENEW</span></h2>
+            </div>
+
+            <p style="margin-bottom: 20px; background: #ffebee; padding: 15px; border-radius: 10px; border-left: 4px solid #f44336;">
+                <strong>【実務の本音】やらせると大体ダメ</strong><br>
+                撮影時に「笑って」「リラックスして」と言っても、実際はうまくいかないことが多い。<br>
+                <strong>→ アプリで加工して笑顔にした方が早い。</strong>これが実務の現実。
+            </p>
+
+            <div class="evidence-box">
+                <h4>一般的な満足度データ（参考値）</h4>
+                <div class="stat-grid">
+                    <div class="stat-card success">
+                        <div class="stat-value">97.9%</div>
+                        <div class="stat-label">「カメラマンと話しやすかった」</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value">97.8%</div>
+                        <div class="stat-label">Photojoy利用者満足度</div>
+                    </div>
+                </div>
+                <p style="margin-top: 10px; color: var(--text-light); font-size: 0.9em;">
+                    ※満足度は高いが、「良い表情が撮れた」とは別の話
+                </p>
+            </div>
+
+            <div class="deep-insight" style="margin-top: 25px;">
+                <div class="insight-header">
+                    <div class="insight-number">!</div>
+                    <h3>実務観点：撮影技術 vs 加工技術</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>撮影時のリラックス誘導の限界</h5>
+                    <ul class="action-list">
+                        <li>「笑って」と言われて自然に笑える人は少ない</li>
+                        <li>緊張は声かけだけでは解消しない</li>
+                        <li>100枚撮って使えるのは数枚が現実</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5 style="color: #81c784;">現実的な解決策</h5>
+                    <ul class="action-list">
+                        <li><strong>撮影：</strong>とにかく数を撮る。構図・背景・光は押さえる</li>
+                        <li><strong>加工：</strong>FaceApp等で笑顔に加工。目を大きく、肌を綺麗に</li>
+                        <li><strong>組み合わせ：</strong>自然な構図の写真 × アプリ加工 = 最強</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="solution-card" style="margin-top: 25px;">
+                <h4>サービスとしての現実的なアプローチ</h4>
+                <ul style="margin-top: 10px;">
+                    <li><strong>撮影時：</strong>人目のない場所で、とにかく枚数を稼ぐ</li>
+                    <li><strong>納品前：</strong>ベストショットを選んで加工で仕上げる</li>
+                    <li><strong>訴求：</strong>「リラックスして撮れる」より「加工込みで最高の1枚を」</li>
+                </ul>
+            </div>
+
+            <h4 style="margin-top: 20px; color: var(--success);">LP訴求コピー案（実務ベース）</h4>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-top: 10px;">
+                <p>⭕「撮影 × 加工で、あなたのベストを引き出す」</p>
+                <p>⭕「人目を気にせず撮れる場所を選びます」</p>
+                <p>⭕「100枚以上撮影して、奇跡の1枚をお届け」</p>
+                <p style="color: #999; font-size: 0.9em;">（「リラックスして自然な笑顔」は期待値コントロール的に避けた方が無難）</p>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://next-level.biz/maripita/app/app_picture.html" target="_blank" class="source-link">マリピタ</a>
+                <a href="https://photojoy.jp/" target="_blank" class="source-link">Photojoy</a>
+            </p>
+
+            <div class="feedback-container" data-section="relax">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'relax', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'relax', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'relax', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-relax">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- LP訴求ポイント④: 心理的障壁の解消 -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">4</div>
+                <h2>心理的障壁の解消策と証拠 <span class="new-tag">NEW</span></h2>
+            </div>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>障壁</th>
+                    <th>解消策</th>
+                    <th>証拠・事例</th>
+                </tr>
+                <tr>
+                    <td><strong>恥ずかしい</strong><br>（最大の障壁）</td>
+                    <td>
+                        ・セルフ写真館（完全個室）<br>
+                        ・人が少ない場所を選定<br>
+                        ・知り合いじゃないプロだから30分我慢
+                    </td>
+                    <td>セルフ写真館PICmii：完全個室で人目ゼロ<br>Photojoy：人少ない場所選定で安心</td>
+                </tr>
+                <tr>
+                    <td><strong>高い</strong></td>
+                    <td>
+                        ・月額換算で訴求<br>
+                        ・ROI（マッチング率2倍）で訴求<br>
+                        ・返金保証
+                    </td>
+                    <td>マッチングフォト：いいね増えなければ全額返金</td>
+                </tr>
+                <tr>
+                    <td><strong>バレたくない</strong></td>
+                    <td>
+                        ・「SNS用撮影」など汎用的名称<br>
+                        ・モニター非掲載プラン
+                    </td>
+                    <td>一部サービスでモニター掲載なしプランあり</td>
+                </tr>
+                <tr>
+                    <td><strong>プロ感が嫌</strong></td>
+                    <td>
+                        ・iPhoneでの撮影プラン<br>
+                        ・「友達代行」コンセプト
+                    </td>
+                    <td>「あえてiPhone」で日常感を演出するサービスあり</td>
+                </tr>
+            </table>
+
+            <h4 style="margin-top: 20px; color: var(--success);">LP訴求コピー案</h4>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-top: 10px;">
+                <p>⭕「完全個室だから、人目ゼロ。あなたのペースで撮影できます」</p>
+                <p>⭕「マッチングアプリとは言わなくてOK。"SNS用プロフィール撮影"でご予約ください」</p>
+                <p>⭕「効果がなければ全額返金。リスクゼロでお試しください」</p>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://secret-calendar.com/media/photography-embarrassing/" target="_blank" class="source-link">シークレットメディア</a>
+                <a href="https://picmii.studio/column/849/" target="_blank" class="source-link">PICmii</a>
+            </p>
+
+            <div class="feedback-container" data-section="barrier">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'barrier', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'barrier', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'barrier', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-barrier">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- コンテンツ配信ネタ -->
+        <section class="section content-focus">
+            <span class="section-label label-content">コンテンツ配信用</span>
+            <div class="section-title">
+                <div class="section-number">C</div>
+                <h2>「あるある」コンテンツネタ集（SNS・ブログ用）</h2>
+            </div>
+
+            <p style="margin-bottom: 20px; color: var(--text-light);">
+                ※以下はLP訴求ではなく、SNS/ブログ/YouTubeなどのコンテンツマーケティング用ネタです。<br>
+                共感を集めてファン化 → 最終的にサービス認知につなげる流れ。
+            </p>
+
+            <div class="content-idea">
+                <h4>「男女の悩みの違い」シリーズ</h4>
+                <ul>
+                    <li>【男性あるある】「写真撮る習慣ない」「自撮りキモいって言われる」「友達に頼めない」</li>
+                    <li>【女性あるある】「加工したいけど詐欺と思われたくない」「30超えたらいいね激減」</li>
+                    <li>【データで見る】男女いいね格差7.7倍の衝撃</li>
+                </ul>
+            </div>
+
+            <div class="content-idea">
+                <h4>「ユーザーの本音」シリーズ</h4>
+                <ul>
+                    <li>「3ヶ月マッチングゼロ…自分そんなにダメなの？」</li>
+                    <li>「男の自撮り、なぜ女性に嫌われるのか？6つの理由」</li>
+                    <li>「写真を頼める友達がいない問題、解決策5選」</li>
+                </ul>
+            </div>
+
+            <div class="content-idea">
+                <h4>「撮り方Tips」シリーズ</h4>
+                <ul>
+                    <li>「100均グッズで他撮り風！スマホ三脚活用術」</li>
+                    <li>「自然光が最強説：屋外撮影のベストタイミング」</li>
+                    <li>「斜め45度の魔法：一瞬でプロっぽくなる角度」</li>
+                </ul>
+            </div>
+
+            <div class="content-idea">
+                <h4>「NG写真」シリーズ（バズりやすい）</h4>
+                <ul>
+                    <li>「トイレの鏡前自撮りは絶対NG」</li>
+                    <li>「真顔が怖い問題」</li>
+                    <li>「筋肉アピール写真、女性はこう思ってる」</li>
+                </ul>
+            </div>
+
+            <div class="feedback-container" data-section="content">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'content', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'content', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'content', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-content">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- ディープリサーチ: ビジネス示唆 -->
+        <section class="section">
+            <div class="section-title">
+                <div class="section-number">B</div>
+                <h2>ビジネス示唆 ディープリサーチ版 <span class="new-tag">DEEP</span></h2>
+            </div>
+
+            <!-- 市場データ -->
+            <div class="market-data">
+                <h4>市場規模データ</h4>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">1,094億円</div>
+                        <div class="stat-label">マッチングアプリ市場規模（2026年）</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value">+7%</div>
+                        <div class="stat-label">前年比成長率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">1,450万人</div>
+                        <div class="stat-label">国内ユーザー数</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-value">25.1%</div>
+                        <div class="stat-label">結婚相手との出会い1位</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.9em; color: var(--text-light);">
+                    出典: <a href="https://prtimes.jp/main/html/rd/p/000000013.000133026.html" target="_blank" class="source-link">マッチングアプリ白書2026</a>
+                    子ども家庭庁「若者のライフデザイン調査」2024
+                </p>
+            </div>
+
+            <!-- 示唆1 -->
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">1</div>
+                    <h3>低価格帯（3,000〜5,000円）は"空白市場"</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>なぜ重要か？</h5>
+                    <ul class="action-list">
+                        <li>現状の最安は7,700円〜。「試しに使ってみたい」層を取りこぼし</li>
+                        <li>タイムチケットで3,000円以下のチケットが存在 → 需要はある</li>
+                        <li>AI写真生成サービス「Phaii」は1枚866円〜で参入済み</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>具体的な参入方法</h5>
+                    <ul class="action-list">
+                        <li><strong>写真診断・添削のみプラン（3,000円）：</strong>撮影なし、今の写真の問題点を指摘</li>
+                        <li><strong>グループ撮影プラン（4,000円/人）：</strong>3〜4人同時撮影で単価を下げる</li>
+                        <li><strong>セルフ撮影指導プラン（3,500円）：</strong>オンラインで撮り方レクチャー</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 示唆2 -->
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">2</div>
+                    <h3>「友達代行」コンセプトは差別化の核</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>なぜ重要か？</h5>
+                    <ul class="action-list">
+                        <li>「広告みたいな写真」は逆効果 → 女性は「一緒にいて楽しそうか」を重視</li>
+                        <li>「iPhoneで自然に切り取った日常感」が最強</li>
+                        <li>「プロカメラマン」より「同世代の友達感」が求められている</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>具体的な実装方法</h5>
+                    <ul class="action-list">
+                        <li><strong>カメラマンの選択肢：</strong>同世代・同性カメラマンを選べるようにする</li>
+                        <li><strong>撮影スタイル：</strong>一眼レフではなくiPhone撮影プランを用意</li>
+                        <li><strong>ブランディング：</strong>「プロ撮影」ではなく「友達代行撮影」と表現</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 示唆3 -->
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">3</div>
+                    <h3>30代以上は"高収益ターゲット"</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>なぜ重要か？</h5>
+                    <ul class="action-list">
+                        <li>30代利用者が最多（男性51%、女性42%）→ ボリュームゾーン</li>
+                        <li>30歳以降でいいね数が急減少 → 写真の重要性を痛感している層</li>
+                        <li>収入があり、効果があれば投資できる</li>
+                        <li>40代以上向けアプリ「アンジュ」「マリッシュ」の伸長</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>具体的な施策</h5>
+                    <ul class="action-list">
+                        <li><strong>メッセージング：</strong>「30代からの逆転戦略」「若作りしない、自然な魅力」</li>
+                        <li><strong>ターゲット広告：</strong>30〜45歳、都市部、未婚、収入中〜高</li>
+                        <li><strong>年齢特化プラン：</strong>「30代専門カメラマン」「40代向け撮影コース」</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 示唆4 -->
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">4</div>
+                    <h3>AI写真生成は"競合"であり"機会"</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>市場の変化</h5>
+                    <ul class="action-list">
+                        <li>AI写真生成サービス「Phaii」「ノバピク」などが台頭</li>
+                        <li>1枚866円〜で他撮り風写真を生成可能</li>
+                        <li>女性の写真加工率67%、男性も増加傾向</li>
+                        <li>Gemini 2.5 Flash Image：「顔が別人にならない」技術が登場</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>対抗戦略 or 活用戦略</h5>
+                    <ul class="action-list">
+                        <li><strong>対抗：</strong>「会った時にガッカリされない」リアル写真の価値を訴求</li>
+                        <li><strong>活用：</strong>AI生成 + プロの微調整 のハイブリッドサービス</li>
+                        <li><strong>棲み分け：</strong>低価格帯はAI、高価格帯はリアル撮影でターゲット分離</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 15px;">
+                    <a href="https://prtimes.jp/main/html/rd/p/000000070.000087412.html" target="_blank" class="source-link">ノバピク</a>
+                    <a href="https://phaii.net/" target="_blank" class="source-link">Phaii</a>
+                </p>
+            </div>
+
+            <!-- 示唆5 -->
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">5</div>
+                    <h3>SNS×LP連携が集客の鍵</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>トレンドデータ</h5>
+                    <ul class="action-list">
+                        <li>ショート動画（TikTok/リール）が全SNSの主流に（視聴者80%が動画優先）</li>
+                        <li>TikTokで新規層開拓 → Instagramでファン化 → LPで刈り取り</li>
+                        <li>ビフォーアフター動画は美容院事例で月10件→35件の実績</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>具体的な施策</h5>
+                    <ul class="action-list">
+                        <li><strong>TikTok：</strong>撮影ビフォーアフター15秒動画、「NGな自撮り」あるあるネタ</li>
+                        <li><strong>Instagram：</strong>撮影事例、撮り方Tips、お客様の声</li>
+                        <li><strong>LP：</strong>証拠データ、返金保証、予約フォーム</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 15px;">
+                    <a href="https://nahato.co.jp/knowledge/sns-marketing-success-stories/" target="_blank" class="source-link">SNSマーケ成功事例</a>
+                    <a href="https://markezine.jp/article/detail/37933" target="_blank" class="source-link">TikTok×Instagram戦略</a>
+                </p>
+            </div>
+
+            <div class="feedback-container" data-section="business">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'business', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'business', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'business', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-business">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: 競合リサーチ（購買理由分析） -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">5</div>
+                <h2>競合分析：なぜ選ばれるのか？購買理由 <span class="new-tag">NEW</span></h2>
+            </div>
+
+            <p style="margin-bottom: 20px; color: var(--text-light);">
+                タイムチケットで人気の撮影サービス10社の購買理由を分析。
+                <strong>選ばれる理由を理解し、自社LPの訴求に活かす。</strong>
+            </p>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>サービス名</th>
+                    <th>価格</th>
+                    <th>評価</th>
+                    <th>推測される購買理由</th>
+                </tr>
+                <tr>
+                    <td><strong>iPhoneでマッチング写真撮影</strong><br>小澤さん</td>
+                    <td>¥6,500〜</td>
+                    <td>⭐5.0（1,800件）</td>
+                    <td>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">圧倒的レビュー数</span>
+                        <span style="background:#fff3e0;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">iPhone=自然体</span>
+                        <span style="background:#e3f2fd;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">安心感</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>マッチングアプリ写真</strong><br>神田さん</td>
+                    <td>¥3,000</td>
+                    <td>⭐5.0（1,263件）</td>
+                    <td>
+                        <span style="background:#ffebee;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">最安価格帯</span>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">レビュー多</span>
+                        <span style="background:#fce4ec;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">お試し層に最適</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>マッチングアプリ用</strong><br>安藤さん</td>
+                    <td>¥7,500</td>
+                    <td>⭐5.0（1,025件）</td>
+                    <td>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">レビュー多</span>
+                        <span style="background:#e3f2fd;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">バランス良い価格</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>アプリ用プロフィール</strong><br>Shinjiさん</td>
+                    <td>¥3,000</td>
+                    <td>⭐5.0（954件）</td>
+                    <td>
+                        <span style="background:#ffebee;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">最安価格帯</span>
+                        <span style="background:#f3e5f5;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">全国出張対応</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>婚活用写真撮影</strong><br>若菜さん</td>
+                    <td>¥7,500</td>
+                    <td>⭐5.0（841件）</td>
+                    <td>
+                        <span style="background:#fce4ec;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">女性カメラマン</span>
+                        <span style="background:#fff3e0;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">女性目線で安心</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>マッチングアプリ写真</strong><br>Ryoさん</td>
+                    <td>¥5,000</td>
+                    <td>⭐5.0（797件）</td>
+                    <td>
+                        <span style="background:#e3f2fd;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">コスパ良</span>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">レビュー多</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>全国対応マッチング写真</strong><br>あつしさん</td>
+                    <td>¥9,000</td>
+                    <td>⭐5.0（596件）</td>
+                    <td>
+                        <span style="background:#f3e5f5;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">全国どこでも対応</span>
+                        <span style="background:#fff3e0;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">地方在住者に訴求</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>婚活・マッチング</strong><br>吉岡さん</td>
+                    <td>¥5,000</td>
+                    <td>⭐5.0（456件）</td>
+                    <td>
+                        <span style="background:#e3f2fd;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">コスパ良</span>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">実績十分</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>大阪マッチング</strong><br>だいすけさん</td>
+                    <td>¥4,000</td>
+                    <td>⭐5.0（435件）</td>
+                    <td>
+                        <span style="background:#fff8e1;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">大阪特化</span>
+                        <span style="background:#ffebee;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">地域密着の安心感</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>マッチングアプリ写真</strong><br>戸川さん</td>
+                    <td>¥7,500</td>
+                    <td>⭐5.0（280件）</td>
+                    <td>
+                        <span style="background:#e3f2fd;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">バランス価格</span>
+                        <span style="background:#e8f5e9;padding:3px 8px;border-radius:10px;font-size:0.85em;margin:2px;">安定の評価</span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="evidence-box" style="margin-top: 30px;">
+                <h4>購買理由の分析まとめ</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #4CAF50;">
+                        <h5 style="color: #4CAF50; margin-bottom: 8px;">①レビュー数 = 信頼の証</h5>
+                        <p style="font-size: 0.9em;">上位サービスは全て<strong>500件以上</strong>のレビュー。「みんなが使ってる」安心感が最大の決め手。</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #FF5722;">
+                        <h5 style="color: #FF5722; margin-bottom: 8px;">②価格帯は3層に分化</h5>
+                        <p style="font-size: 0.9em;"><strong>3,000円</strong>（お試し）、<strong>5,000円</strong>（コスパ）、<strong>7,500円</strong>（安心）の3層で需要を網羅。</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #2196F3;">
+                        <h5 style="color: #2196F3; margin-bottom: 8px;">③「iPhone撮影」が差別化</h5>
+                        <p style="font-size: 0.9em;">最多レビューのサービスは「iPhone」を明示。<strong>自然体の象徴</strong>として機能。</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #9C27B0;">
+                        <h5 style="color: #9C27B0; margin-bottom: 8px;">④地域特化の強み</h5>
+                        <p style="font-size: 0.9em;">「全国対応」「大阪特化」など、<strong>エリア訴求</strong>が特定層に刺さる。</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #E91E63;">
+                        <h5 style="color: #E91E63; margin-bottom: 8px;">⑤女性カメラマン需要</h5>
+                        <p style="font-size: 0.9em;">女性目線でアドバイスを受けたい層に<strong>女性カメラマン</strong>は強い訴求。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="solution-card" style="margin-top: 25px;">
+                <h4>LP訴求への活用ポイント</h4>
+                <ul style="margin-top: 10px;">
+                    <li><strong>レビュー数を最前面に：</strong>「○○名が選んだ」「レビュー数No.1」など実績訴求</li>
+                    <li><strong>価格帯別プラン設計：</strong>お試し→コスパ→プレミアムの3段階を用意</li>
+                    <li><strong>撮影方法を明示：</strong>iPhone撮影/一眼レフ撮影を選択肢として提示</li>
+                    <li><strong>カメラマン情報の充実：</strong>性別・年代・得意エリアを明記して安心感UP</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://www.google.com/search?q=%E3%82%BF%E3%82%A4%E3%83%A0%E3%83%81%E3%82%B1%E3%83%83%E3%83%88+%E3%83%9E%E3%83%83%E3%83%81%E3%83%B3%E3%82%B0%E3%82%A2%E3%83%97%E3%83%AA+%E5%86%99%E7%9C%9F" target="_blank" class="source-link">タイムチケット検索</a>
+                <a href="https://www.timeticket.jp/items/c_5/sc_62/pr_1/" target="_blank" class="source-link">タイムチケット一覧</a>
+            </p>
+
+            <div class="feedback-container" data-section="competitor">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'competitor', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'competitor', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'competitor', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-competitor">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: 成果の証拠の出し方 ディープリサーチ -->
+        <section class="section lp-focus">
+            <span class="section-label label-lp">LP訴求ポイント</span>
+            <div class="section-title">
+                <div class="section-number">6</div>
+                <h2>「いいね数UP」証拠の出し方 <span class="new-tag">DEEP</span></h2>
+            </div>
+
+            <p style="margin-bottom: 20px; color: var(--text-light);">
+                「マッチング成果の実感：いいね数・マッチ数UP」を<strong>どう証明するか</strong>のディープリサーチ結果。
+                LP・広告で使える具体的な手法と事例。
+            </p>
+
+            <div class="evidence-box">
+                <h4>実際の成果データ（他社事例）</h4>
+                <div class="stat-grid">
+                    <div class="stat-card success">
+                        <div class="stat-value">10倍</div>
+                        <div class="stat-label">いいね数の増加<br>（タイムチケット利用者口コミ）</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-value">4倍</div>
+                        <div class="stat-label">マッチ数の増加<br>（同上）</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-value">28倍</div>
+                        <div class="stat-label">いいね数の増加<br>（ウォーカープラス事例）</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">74.9%</div>
+                        <div class="stat-label">マッチング成功率<br>（マッチングフォト）</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.9em;">
+                    出典: タイムチケット利用者レビュー、ウォーカープラス取材記事、マッチングフォト公式
+                </p>
+            </div>
+
+            <h3 style="margin-top: 30px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                証拠の出し方パターン4選
+            </h3>
+
+            <div class="deep-insight" style="margin-top: 20px;">
+                <div class="insight-header">
+                    <div class="insight-number">A</div>
+                    <h3>ビフォーアフター数値比較</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>具体的な手法</h5>
+                    <ul class="action-list">
+                        <li><strong>撮影前1ヶ月のいいね数</strong>をスクリーンショットで記録</li>
+                        <li><strong>撮影後1ヶ月のいいね数</strong>をスクリーンショットで記録</li>
+                        <li>「○倍になりました！」と具体的な数値で訴求</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>LP訴求コピー例</h5>
+                    <p>「写真変更後1ヶ月でいいね数<strong>10倍</strong>、マッチ数<strong>4倍</strong>に！」</p>
+                    <p style="margin-top:10px;">「撮影前：月3いいね → 撮影後：月28いいね（<strong>約10倍</strong>）」</p>
+                </div>
+            </div>
+
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">B</div>
+                    <h3>保証制度で信頼を獲得</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>他社の保証事例</h5>
+                    <table class="comparison-table" style="background: rgba(255,255,255,0.1);">
+                        <tr>
+                            <th style="background: rgba(255,255,255,0.2);">サービス</th>
+                            <th style="background: rgba(255,255,255,0.2);">保証内容</th>
+                        </tr>
+                        <tr style="color: white;">
+                            <td>マッチングフォト</td>
+                            <td><strong>全額返金保証</strong>：いいね数が増えなければ全額返金</td>
+                        </tr>
+                        <tr style="color: white;">
+                            <td>Photojoy</td>
+                            <td><strong>再撮影保証</strong>：1ヶ月後マッチング増えなければ無料で再撮影</td>
+                        </tr>
+                        <tr style="color: white;">
+                            <td>一部タイムチケット</td>
+                            <td><strong>追加撮影無料</strong>：満足いくまで撮り直し</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="insight-how">
+                    <h5>LP訴求コピー例</h5>
+                    <p>「<strong>いいね数が増えなければ全額返金</strong>。自信があるから約束できます」</p>
+                    <p style="margin-top:10px;">「1ヶ月後にマッチング増えなければ、<strong>無料で再撮影</strong>」</p>
+                </div>
+            </div>
+
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">C</div>
+                    <h3>口コミ・レビュー活用</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>実際の口コミ例（タイムチケットより）</h5>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                        <p style="font-style: italic;">「いいねが<strong>10倍に増え</strong>、マッチ数も<strong>4倍に増えました</strong>」</p>
+                        <p style="font-style: italic; margin-top: 10px;">「撮影後すぐに使ったら、<strong>マッチングが急増</strong>して驚きました」</p>
+                        <p style="font-style: italic; margin-top: 10px;">「今まで全然マッチしなかったのに、<strong>初日で5人とマッチ</strong>」</p>
+                    </div>
+                </div>
+                <div class="insight-how">
+                    <h5>活用方法</h5>
+                    <ul class="action-list">
+                        <li>撮影後に「ビフォーアフターレビュー」を依頼</li>
+                        <li>具体的な数値を含むレビューを優先的にLPに掲載</li>
+                        <li>許可を得てスクリーンショット付きで掲載</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="deep-insight">
+                <div class="insight-header">
+                    <div class="insight-number">D</div>
+                    <h3>統計データ引用</h3>
+                </div>
+                <div class="insight-why">
+                    <h5>使える統計データ</h5>
+                    <ul class="action-list">
+                        <li>マッチングフォト調査：写真改善後のマッチング率<strong>74.9%</strong>（通常36.4%の約2倍）</li>
+                        <li>Photojoy調査：利用者の<strong>71%</strong>がマッチング率向上を実感</li>
+                        <li>業界統計：プロ写真利用者は非利用者の<strong>2〜5倍</strong>のマッチング率</li>
+                    </ul>
+                </div>
+                <div class="insight-how">
+                    <h5>LP訴求コピー例</h5>
+                    <p>「プロ撮影でマッチング率<strong>2.05倍</strong>（業界調査より）」</p>
+                    <p style="margin-top:10px;">「利用者の<strong>71%</strong>が"マッチング率が上がった"と回答」</p>
+                </div>
+            </div>
+
+            <div class="solution-card" style="margin-top: 25px;">
+                <h4>すぐ使えるLP訴求テンプレート <span class="new-tag">DEEP</span></h4>
+                <p style="color: var(--text-light); margin-bottom: 15px;">※実際の利用者の声をベースに作成</p>
+
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 10px;">
+                    <h5 style="color: var(--success); margin-bottom: 10px;">パターン1: 具体的な数値で訴求</h5>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「写真を変えて<strong>いいね10倍、マッチ4倍</strong>に」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>「相手からのいいねが10倍に増え、マッチ数も4倍に増えました！」（タイムチケット利用者）
+                        </p>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「たった2日で<strong>10いいね→80いいね</strong>に」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>40代男性「一週間で10も付かなかったものが、たった2日で80いいね！まで付きました。威力は絶大です」
+                        </p>
+                    </div>
+
+                    <h5 style="color: var(--success); margin-top: 20px; margin-bottom: 10px;">パターン2: 成果報告型</h5>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「撮影から<strong>3週間で彼女ができました</strong>」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>マッチングフォト利用者の体験談より
+                        </p>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「with<strong>700超えいいね</strong>達成」「Pairs<strong>500+いいね</strong>」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>タイムチケット実績報告（20代男性・30代男性）
+                        </p>
+                    </div>
+
+                    <h5 style="color: var(--success); margin-top: 20px; margin-bottom: 10px;">パターン3: 安心訴求型</h5>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「<strong>94%</strong>がいいね増加を実感」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>Photojoy利用者50人への独自アンケート調査結果
+                        </p>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「効果がなければ<strong>全額返金</strong>」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>マッチングフォト公式保証制度
+                        </p>
+                    </div>
+
+                    <h5 style="color: var(--success); margin-top: 20px; margin-bottom: 10px;">パターン4: 撮影体験訴求型</h5>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「<strong>友達と話してるみたい</strong>で緊張せずに撮れました」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>30代女性「友達と話しているような感覚で、気取らずさりげなく写真を撮ってくれるのがこのサービスの魅力」
+                        </p>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+                        <p style="font-size: 1.1em; margin-bottom: 10px;">「人目のない場所で撮ってもらえて<strong>恥ずかしさゼロ</strong>」</p>
+                        <p style="font-size: 0.85em; color: #666;">
+                            <strong>出典：</strong>利用者口コミ「人目のない場所で撮影してもらえたので恥ずかしさなく撮ることができてよかった」
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-data" style="margin-top: 25px;">
+                <h4>成果計測の具体的ステップ（自社サービス用）</h4>
+                <ol style="margin-top: 15px; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">
+                        <strong>撮影前ヒアリング：</strong>現在のいいね数・マッチ数を確認（スクショ推奨）
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>撮影・納品：</strong>写真設定のコツも伝授（並び順、メイン写真選び）
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>1週間後フォロー：</strong>「いいね数変化ありましたか？」と確認メール
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>1ヶ月後フォロー：</strong>ビフォーアフターのスクショ依頼 → 許可を得てLP掲載
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <strong>レビュー依頼：</strong>具体的な数値を含むレビューを依頼
+                    </li>
+                </ol>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <a href="https://matching-photo.com/" target="_blank" class="source-link">マッチングフォト</a>
+                <a href="https://photojoy.jp/" target="_blank" class="source-link">Photojoy</a>
+                <a href="https://www.google.com/search?q=%E3%83%9E%E3%83%83%E3%83%81%E3%83%B3%E3%82%B0%E3%82%A2%E3%83%97%E3%83%AA+%E5%86%99%E7%9C%9F+%E3%81%84%E3%81%84%E3%81%AD%E5%A2%97%E3%81%88%E3%81%9F" target="_blank" class="source-link">Google検索: いいね増えた</a>
+            </p>
+
+            <div class="feedback-container" data-section="evidence">
+                <button class="feedback-btn need-more" onclick="selectFeedback(this, 'evidence', 'need-more')">もっと詳しく</button>
+                <button class="feedback-btn not-needed" onclick="selectFeedback(this, 'evidence', 'not-needed')">不要</button>
+                <button class="feedback-btn improve" onclick="selectFeedback(this, 'evidence', 'improve')">改善</button>
+                <div class="feedback-input" id="feedback-evidence">
+                    <textarea placeholder="改善内容を記入してください..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- コピー用サマリー -->
+        <section class="section">
+            <div class="section-title">
+                <div class="section-number">📋</div>
+                <h2>フィードバックサマリー</h2>
+            </div>
+
+            <div class="copy-summary">
+                <h4>選択したフィードバック（コピー用）</h4>
+                <div id="feedback-summary">
+                    <p style="color: var(--text-light);">フィードバックを選択すると、ここに表示されます</p>
+                </div>
+                <button class="copy-btn" onclick="copyFeedback()">フィードバックをコピー</button>
+            </div>
+        </section>
+
+        <footer>
+            <p>CC3: マッチングアプリ写真 ビジネス戦略レポート【RENEW】</p>
+            <p>調査日: 2026-01-18 | ディープリサーチ版</p>
+        </footer>
+    </div>
+
+    <script>
+        const feedbackData = {};
+
+        function selectFeedback(btn, section, type) {
+            const container = btn.closest('.feedback-container');
+            container.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            const inputDiv = document.getElementById(`feedback-${section}`);
+            if (type === 'improve') {
+                inputDiv.classList.add('show');
+            } else {
+                inputDiv.classList.remove('show');
+            }
+
+            feedbackData[section] = {
+                type: type,
+                text: type === 'improve' ? inputDiv.querySelector('textarea').value : ''
+            };
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summaryDiv = document.getElementById('feedback-summary');
+            const sectionNames = {
+                'strategy': '戦略分離',
+                'natural': '自然な写真の証拠',
+                'cost': 'コスパ訴求',
+                'relax': 'リラックス誘導',
+                'barrier': '心理的障壁解消',
+                'content': 'コンテンツネタ',
+                'business': 'ビジネス示唆',
+                'competitor': '競合分析・購買理由',
+                'evidence': 'いいね数UP証拠の出し方'
+            };
+
+            const typeLabels = {
+                'need-more': '✅もっと詳しく',
+                'not-needed': '❌不要',
+                'improve': '🔧改善'
+            };
+
+            let html = '<ul style="list-style: none; padding: 0;">';
+
+            for (const [section, data] of Object.entries(feedbackData)) {
+                html += `<li style="padding: 5px 0; border-bottom: 1px solid #eee;">`;
+                html += `<strong>${sectionNames[section]}</strong>: ${typeLabels[data.type]}`;
+                if (data.type === 'improve') {
+                    const textarea = document.querySelector(`#feedback-${section} textarea`);
+                    if (textarea && textarea.value) {
+                        html += ` - ${textarea.value}`;
+                    }
+                }
+                html += `</li>`;
+            }
+
+            html += '</ul>';
+
+            if (Object.keys(feedbackData).length === 0) {
+                html = '<p style="color: var(--text-light);">フィードバックを選択すると、ここに表示されます</p>';
+            }
+
+            summaryDiv.innerHTML = html;
+        }
+
+        document.querySelectorAll('.feedback-input textarea').forEach(textarea => {
+            textarea.addEventListener('input', () => {
+                const section = textarea.closest('.feedback-container').dataset.section;
+                if (feedbackData[section]) {
+                    feedbackData[section].text = textarea.value;
+                    updateSummary();
+                }
+            });
+        });
+
+        function copyFeedback() {
+            const summaryDiv = document.getElementById('feedback-summary');
+            const text = summaryDiv.innerText;
+
+            navigator.clipboard.writeText(`【CC3: ビジネス戦略レポート フィードバック】\n${text}`).then(() => {
+                alert('フィードバックをクリップボードにコピーしました！');
+            }).catch(err => {
+                console.error('コピーに失敗しました:', err);
+            });
+        }
+    </script>
+</body>
+</html>

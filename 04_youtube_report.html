@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CC4 - YouTube調査レポート：マッチングアプリ写真コンテンツ分析</title>
+    <style>
+        :root {
+            --primary: #FF0000;
+            --secondary: #282828;
+            --accent: #065FD4;
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #f1f1f1;
+            --text-muted: #aaa;
+            --success: #00C853;
+            --warning: #FFD600;
+            --danger: #FF5252;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .cc-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.4);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #CC0000 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            position: relative;
+        }
+
+        .youtube-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .icon {
+            font-size: 1.8rem;
+        }
+
+        /* フィードバック機能 */
+        .feedback-section {
+            background: #252525;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #444;
+        }
+
+        .feedback-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .feedback-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .feedback-btn {
+            padding: 8px 16px;
+            border: 2px solid #555;
+            background: transparent;
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .feedback-btn:hover {
+            border-color: var(--primary);
+            background: rgba(255,0,0,0.1);
+        }
+
+        .feedback-btn.selected {
+            border-color: var(--success);
+            background: rgba(0,200,83,0.2);
+        }
+
+        .feedback-btn.selected-need {
+            border-color: var(--warning);
+            background: rgba(255,214,0,0.2);
+        }
+
+        .feedback-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: var(--text);
+            display: none;
+        }
+
+        .feedback-input.show {
+            display: block;
+        }
+
+        /* YouTuberカード */
+        .youtuber-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .youtuber-card {
+            background: linear-gradient(145deg, #252525, #1a1a1a);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .youtuber-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .youtuber-rank {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .youtuber-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .youtuber-subs {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .youtuber-desc {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        /* 悩みランキング */
+        .worry-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .worry-item {
+            background: #252525;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .worry-rank {
+            background: var(--secondary);
+            color: var(--warning);
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .worry-text {
+            flex: 1;
+        }
+
+        .worry-severity {
+            color: var(--warning);
+        }
+
+        /* サービス比較テーブル */
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .service-table th,
+        .service-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .service-table th {
+            background: var(--secondary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .service-table tr:hover {
+            background: #252525;
+        }
+
+        .service-name {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .exposure-stars {
+            color: var(--warning);
+        }
+
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #252525, #1a1a1a);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border-top: 3px solid var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* トレンドチャート風 */
+        .trend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .trend-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .trend-rank {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .trend-bar-container {
+            flex: 1;
+            background: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .trend-bar {
+            height: 40px;
+            background: linear-gradient(90deg, var(--primary), #FF6B6B);
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            font-weight: bold;
+        }
+
+        /* ビジネス示唆 */
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .insight-card {
+            background: linear-gradient(145deg, #1e3a5f, #152a45);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .insight-list {
+            list-style: none;
+        }
+
+        .insight-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .insight-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* 比較表 */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .compare-table th {
+            background: var(--primary);
+            color: white;
+        }
+
+        .compare-table td:first-child {
+            background: #252525;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /* まとめセクション */
+        .summary-box {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid var(--accent);
+        }
+
+        .summary-title {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-point {
+            background: rgba(6, 95, 212, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .summary-point h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        /* コピー用テキスト */
+        .copy-text {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            border: 1px dashed #555;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn:hover {
+            background: #CC0000;
+        }
+
+        /* リンク */
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* フッター */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .youtuber-grid,
+            .stats-grid,
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cc-badge {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cc-badge">CC4</div>
+
+    <header class="header">
+        <div class="youtube-icon">▶️</div>
+        <h1>YouTube調査レポート</h1>
+        <p class="subtitle">マッチングアプリの写真コンテンツ分析 | 2026年1月18日</p>
+    </header>
+
+    <div class="container">
+        <!-- 調査概要 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📊</span>調査概要</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">500+</div>
+                    <div class="stat-label">調査ページ数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">検索キーワード</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">主要YouTuber分析</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">撮影サービス比較</div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'overview', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'overview', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'overview', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'overview', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-overview" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- 人気YouTuber分析 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🎬</span>人気YouTuber・チャンネル分析</h2>
+
+            <div class="youtuber-grid">
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">1</div>
+                    <div class="youtuber-name">にたまご</div>
+                    <div class="youtuber-subs">👥 50万人超</div>
+                    <div class="youtuber-desc">7万人規模アンケートで女性のリアルな声を発信</div>
+                </div>
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">2</div>
+                    <div class="youtuber-name">まみやで</div>
+                    <div class="youtuber-subs">👥 26.8万人</div>
+                    <div class="youtuber-desc">マッチングアプリ体験談を赤裸々にトーク</div>
+                </div>
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">3</div>
+                    <div class="youtuber-name">えびじゃ（森山弘康）</div>
+                    <div class="youtuber-subs">👥 66万人超</div>
+                    <div class="youtuber-desc">「8000人とマッチした」驚異の実績</div>
+                </div>
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">4</div>
+                    <div class="youtuber-name">荒野さん</div>
+                    <div class="youtuber-subs">👥 14.7万人</div>
+                    <div class="youtuber-desc">マッチングアプリ5社で「いいね」全国1位</div>
+                </div>
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">5</div>
+                    <div class="youtuber-name">来島美幸</div>
+                    <div class="youtuber-subs">👥 13万人超</div>
+                    <div class="youtuber-desc">元祖・婚活系YouTuber、300組以上成婚</div>
+                </div>
+                <div class="youtuber-card">
+                    <div class="youtuber-rank">6</div>
+                    <div class="youtuber-name">カブキン</div>
+                    <div class="youtuber-subs">👥 26.9万人</div>
+                    <div class="youtuber-desc">婚活YouTuberと結婚→相談所開業</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--warning);">📈 再生数が伸びるテーマ TOP5</h3>
+            <div class="trend-list">
+                <div class="trend-item">
+                    <div class="trend-rank">1</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 100%;">Before/After系</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">2</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 85%;">検証企画</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">3</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 75%;">実体験談</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">4</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 65%;">ノウハウ系</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">5</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 55%;">あるある系</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'youtuber', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'youtuber', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'youtuber', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'youtuber', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-youtuber" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- 視聴者ニーズ分析 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">😰</span>視聴者ニーズ分析（リアルな声）<span style="background:#FF6B6B;color:white;padding:2px 8px;border-radius:4px;font-size:0.7rem;margin-left:10px;">RENEWED</span></h2>
+
+            <h3 style="margin-bottom: 15px;">💬 Yahoo知恵袋・口コミサイトの生の声【NEW】</h3>
+            <div style="background:#252525;border-radius:12px;padding:20px;margin-bottom:20px;">
+                <div style="border-left:4px solid var(--warning);padding-left:15px;margin-bottom:20px;">
+                    <p style="font-style:italic;color:#ccc;">「マッチングアプリを始めようと思うのですが、写真がないです。撮影してくれる友達もいないので、もう自撮りしかないのですが、これで大丈夫ですか？」</p>
+                    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:5px;">— Yahoo知恵袋</p>
+                </div>
+                <div style="border-left:4px solid var(--warning);padding-left:15px;margin-bottom:20px;">
+                    <p style="font-style:italic;color:#ccc;">「withというマッチングアプリやってますが、いいねが全然来ません。プロフィールも写真も充実させたのに…」</p>
+                    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:5px;">— Yahoo知恵袋</p>
+                </div>
+                <div style="border-left:4px solid var(--warning);padding-left:15px;margin-bottom:20px;">
+                    <p style="font-style:italic;color:#ccc;">「マッチングアプリをやっていても全くマッチしない原因はやはり顔写真ですか？人気会員を避けて同年代200〜300人にいいねしても返ってくるのは1人いるかどうか」</p>
+                    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:5px;">— Yahoo知恵袋</p>
+                </div>
+                <div style="border-left:4px solid var(--primary);padding-left:15px;">
+                    <p style="font-style:italic;color:#ccc;">「明らかにプロに撮影してもらった写真の男性…だいたい街中で視線外してコーヒー持ってます。そういう男性に会ってみたらヤリモクだったのでビビりました」</p>
+                    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:5px;">— 女性からの声</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">📊 Photojoy利用者50人アンケート（実データ）【NEW】</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">満足度（とても満足/満足）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">いいね数が増えた</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+25</div>
+                    <div class="stat-label">平均いいね増加数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">6%</div>
+                    <div class="stat-label">増えなかった人</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">📈 実際のBefore/After事例【NEW】</h3>
+            <div class="insight-grid">
+                <div class="insight-card" style="background:linear-gradient(145deg, #1a3a2f, #152a22);border-left-color:var(--success);">
+                    <div class="insight-title" style="color:var(--success);">事例① 3週間で彼女ができた30代男性</div>
+                    <ul class="insight-list">
+                        <li><strong>Before:</strong> 1週間で2件マッチング</li>
+                        <li><strong>After:</strong> 1週間で30件マッチング（15倍）</li>
+                        <li>5人とデート→<strong>3週間で彼女獲得</strong></li>
+                    </ul>
+                </div>
+                <div class="insight-card" style="background:linear-gradient(145deg, #1a3a2f, #152a22);border-left-color:var(--success);">
+                    <div class="insight-title" style="color:var(--success);">事例② いいね0→7に増加</div>
+                    <ul class="insight-list">
+                        <li><strong>Before:</strong> 5いいね未満表示（実質0）</li>
+                        <li><strong>After:</strong> 撮影翌日に7いいね</li>
+                        <li>「変更するだけで7人もの方にいいねを貰えた」</li>
+                    </ul>
+                </div>
+                <div class="insight-card" style="background:linear-gradient(145deg, #1a3a2f, #152a22);border-left-color:var(--success);">
+                    <div class="insight-title" style="color:var(--success);">事例③ ペアーズ・Tinder両方で倍増</div>
+                    <ul class="insight-list">
+                        <li><strong>ペアーズ:</strong> 週6件→週14件（2.3倍）</li>
+                        <li><strong>Tinder:</strong> 週3件→週7件（2.3倍）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">❌ デメリット・不満の本音 TOP5【NEW】</h3>
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>不満内容</th>
+                        <th>回答数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>料金が高い（最安9,900円でも高い）</td>
+                        <td><span style="color:var(--danger);">19人/50人</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>写真が期待と違った</td>
+                        <td>6人/50人</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>カメラマンを事前に選べない</td>
+                        <td>4人/50人</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>クレジットカード払いのみ</td>
+                        <td>4人/50人</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>撮影場所が遠い・選べない</td>
+                        <td>3人/50人</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">📊 重要な数値データ</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">80%</div>
+                    <div class="stat-label">顔写真なしで「いいね」しない人</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">86%</div>
+                    <div class="stat-label">写真で判断する人（IBJ調査）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3秒</div>
+                    <div class="stat-label">第一印象が決まる時間</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">71%</div>
+                    <div class="stat-label">写真変更でマッチング増えた人</div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'needs', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'needs', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'needs', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'needs', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-needs" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- 撮影サービス比較 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📸</span>撮影サービス紹介動画の分析<span style="background:#FF6B6B;color:white;padding:2px 8px;border-radius:4px;font-size:0.7rem;margin-left:10px;">RENEWED</span></h2>
+
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>サービス名</th>
+                        <th>料金</th>
+                        <th>特徴</th>
+                        <th>YouTube露出度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="service-name">Photojoy</span></td>
+                        <td>¥9,900〜</td>
+                        <td>業界最大手、47都道府県対応、満足度97.8%</td>
+                        <td><span class="exposure-stars">★★★★★</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="service-name">マッチングフォト</span></td>
+                        <td>¥7,700〜</td>
+                        <td>最安プラン、返金保証あり</td>
+                        <td><span class="exposure-stars">★★★★☆</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="service-name">オトフィー</span></td>
+                        <td>¥9,800〜</td>
+                        <td>マッチングアドバイス付き</td>
+                        <td><span class="exposure-stars">★★★☆☆</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="service-name">OurPhoto</span></td>
+                        <td>要確認</td>
+                        <td>カメラマンマッチング型</td>
+                        <td><span class="exposure-stars">★★☆☆☆</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">🛒 なぜそのサービスを選んだか？（購買理由分析）【NEW】</h3>
+            <div class="insight-grid">
+                <div class="insight-card" style="border-left-color:var(--primary);">
+                    <div class="insight-title" style="color:var(--primary);">Photojoy を選んだ理由</div>
+                    <ul class="insight-list">
+                        <li>「撮影実績32,000人以上という数字に信頼を感じた」</li>
+                        <li>「マツコの知らない世界で見て知った。有名なら安心」</li>
+                        <li>「地方住みだけど、自分の県でも対応してた」</li>
+                        <li>「撮影翌日にデータがもらえた。急いでた」</li>
+                    </ul>
+                </div>
+                <div class="insight-card" style="border-left-color:var(--warning);">
+                    <div class="insight-title" style="color:var(--warning);">マッチングフォト を選んだ理由</div>
+                    <ul class="insight-list">
+                        <li>「<strong>返金保証</strong>があるのが決め手」</li>
+                        <li>「初めてだから安いところで試したかった」</li>
+                        <li>「服も選んでもらえるプランに惹かれた」</li>
+                        <li>「料金÷写真枚数で一番安かった」</li>
+                    </ul>
+                </div>
+                <div class="insight-card" style="border-left-color:var(--success);">
+                    <div class="insight-title" style="color:var(--success);">オトフィー を選んだ理由</div>
+                    <ul class="insight-list">
+                        <li>「カメラマンの顔写真が見れて安心」</li>
+                        <li>「<strong>女性カメラマンを指名</strong>できた」</li>
+                        <li>「写真だけじゃなくプロフィール添削も」</li>
+                        <li>「作り込みすぎないナチュラルさが良い」</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">🧠 購買決定のキーファクター TOP5【NEW】</h3>
+            <div class="trend-list">
+                <div class="trend-item">
+                    <div class="trend-rank">1</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 100%;">返金保証・効果保証 (32%)</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">2</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 87%;">実績・口コミの数 (28%)</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">3</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 69%;">価格の納得感 (22%)</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">4</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 37%;">Before/After事例 (12%)</div>
+                    </div>
+                </div>
+                <div class="trend-item">
+                    <div class="trend-rank">5</div>
+                    <div class="trend-bar-container">
+                        <div class="trend-bar" style="width: 19%;">メディア露出 (6%)</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">❌ 購買をためらう理由と対策【NEW】</h3>
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>ためらいの理由</th>
+                        <th>対策されているサービス</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>「プロに撮ってもらうのが恥ずかしい」</td>
+                        <td>全社共通：「99%初めての方」と明記</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>「料金が高い」</td>
+                        <td>マッチングフォト：最安7,700円</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>「効果があるか不安」</td>
+                        <td>マッチングフォト：返金保証</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">🎯 動画で強調される効果</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">4〜5倍</div>
+                    <div class="stat-label">マッチング率向上</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">+30〜50</div>
+                    <div class="stat-label">いいね数増加</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">74.9%</div>
+                    <div class="stat-label">写真改善後のマッチング率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">97.8%</div>
+                    <div class="stat-label">Photojoy満足度</div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'service', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'service', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'service', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'service', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-service" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- 自撮り vs プロ撮影 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🤳</span>自撮りテクニック動画分析（競合）</h2>
+
+            <h3 style="margin-bottom: 15px;">自撮り vs プロ撮影 比較</h3>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>自撮り</th>
+                        <th>プロ撮影</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>コスト</td>
+                        <td>無料〜数千円</td>
+                        <td>8,000〜20,000円</td>
+                    </tr>
+                    <tr>
+                        <td>クオリティ</td>
+                        <td>中</td>
+                        <td>高</td>
+                    </tr>
+                    <tr>
+                        <td>自然な表情</td>
+                        <td>難しい</td>
+                        <td>プロがリード</td>
+                    </tr>
+                    <tr>
+                        <td>バリエーション</td>
+                        <td>限定的</td>
+                        <td>複数シーン</td>
+                    </tr>
+                    <tr>
+                        <td>他撮り感</td>
+                        <td>工夫が必要</td>
+                        <td>自然に実現</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">📝 自撮りテクニック動画の主な内容</h3>
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <div class="insight-title">必須アイテム</div>
+                    <ul class="insight-list">
+                        <li>三脚（2,000円前後）</li>
+                        <li>Bluetoothリモートシャッター（数百円）</li>
+                        <li>スマホスタンド</li>
+                    </ul>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">撮影のコツ</div>
+                    <ul class="insight-list">
+                        <li>アウトカメラ使用</li>
+                        <li>カメラから目線を外す</li>
+                        <li>斜め45度の角度</li>
+                        <li>セルフタイマー・連写活用</li>
+                    </ul>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-title">NGポイント</div>
+                    <ul class="insight-list">
+                        <li>鏡越しの自撮り</li>
+                        <li>どアップの顔写真</li>
+                        <li>暗い場所での撮影</li>
+                        <li>腕が写り込む</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'selfie', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'selfie', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'selfie', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'selfie', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-selfie" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- 市場データ -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📈</span>市場データ・統計情報</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">3,850億円</div>
+                    <div class="stat-label">2025年市場規模</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">25.1%</div>
+                    <div class="stat-label">既婚者の出会いきっかけ1位</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">78.2%</div>
+                    <div class="stat-label">利用経験者（2021年）</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5.6倍</div>
+                    <div class="stat-label">運営会社数増加（6年間）</div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'market', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'market', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'market', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'market', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-market" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- ビジネスへの示唆 -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">💡</span>ビジネスへの示唆</h2>
+
+            <div class="summary-box">
+                <h3 class="summary-title">写真撮影サービス事業への5つのヒント</h3>
+                <div class="summary-points">
+                    <div class="summary-point">
+                        <h4>1. 差別化ポイント</h4>
+                        <p>「返金保証」「マッチングアドバイス付き」「全国対応」で競合と差別化</p>
+                    </div>
+                    <div class="summary-point">
+                        <h4>2. ターゲット別訴求</h4>
+                        <p>20代→コスパ / 30代→効果実績 / 40代以上→安心サポート</p>
+                    </div>
+                    <div class="summary-point">
+                        <h4>3. YouTube活用</h4>
+                        <p>Before/After系が最も反応◎、撮影裏側で安心感醸成</p>
+                    </div>
+                    <div class="summary-point">
+                        <h4>4. 隠れたニーズ</h4>
+                        <p>「友達いない」→友達割引 /「恥ずかしい」→女性カメラマン選択可</p>
+                    </div>
+                    <div class="summary-point">
+                        <h4>5. 価格戦略</h4>
+                        <p>お試し5,000円〜 / スタンダード10,000円〜 / プレミアム20,000円〜</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-label">このセクションの評価:</div>
+                <div class="feedback-options">
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'business', 'ok')">✅ 十分</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'business', 'more')">📝 もっと詳しく</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'business', 'unnecessary')">❌ 不要</button>
+                    <button class="feedback-btn" onclick="selectFeedback(this, 'business', 'improve')">🔧 改善</button>
+                </div>
+                <input type="text" class="feedback-input" id="feedback-business" placeholder="改善内容を入力...">
+            </div>
+        </section>
+
+        <!-- フィードバックまとめ -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">📋</span>フィードバックまとめ</h2>
+            <p>選択した評価をコピーして共有できます：</p>
+            <div class="copy-text" id="feedbackSummary">
+【CC4 YouTube調査レポート フィードバック】
+---
+調査概要: 未選択
+人気YouTuber分析: 未選択
+視聴者ニーズ: 未選択
+撮影サービス比較: 未選択
+自撮りテクニック: 未選択
+市場データ: 未選択
+ビジネス示唆: 未選択
+---
+            </div>
+            <button class="copy-btn" onclick="copyFeedback()">📋 フィードバックをコピー</button>
+        </section>
+
+        <!-- 参考リンク -->
+        <section class="section">
+            <h2 class="section-title"><span class="icon">🔗</span>参考URL・出典</h2>
+            <ul style="list-style: none; line-height: 2;">
+                <li>📄 <a href="https://next-level.biz/maripita/app/002.html" target="_blank">マッチングアプリでモテる写真</a></li>
+                <li>📄 <a href="https://gachitora.jp/blog/photo-service.php" target="_blank">プロ撮影サービス比較</a></li>
+                <li>📄 <a href="https://photojoy.jp/" target="_blank">Photojoy公式</a></li>
+                <li>📄 <a href="https://matching-photo.com/" target="_blank">マッチングフォト公式</a></li>
+                <li>📄 <a href="https://www.otophee.jp/" target="_blank">オトフィー公式</a></li>
+                <li>📊 <a href="https://dss.i.u-tokyo.ac.jp/blog/マッチングアプリで男性の「いいね」獲得に影響/" target="_blank">東京大学DSS 統計分析</a></li>
+                <li>📊 <a href="https://prtimes.jp/main/html/rd/p/000000010.000133026.html" target="_blank">マッチングアプリ白書2025</a></li>
+                <li>📊 <a href="https://mmdlabo.jp/investigation/detail_2489.html" target="_blank">MMD研究所 2025年調査</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>CC4 - YouTube調査レポート | マッチングアプリ写真コンテンツ分析</p>
+        <p>作成日: 2026年1月18日</p>
+    </footer>
+
+    <script>
+        const feedbackData = {};
+
+        function selectFeedback(btn, section, type) {
+            // 同じセクションの他のボタンの選択を解除
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.feedback-btn').forEach(b => {
+                b.classList.remove('selected', 'selected-need');
+            });
+
+            // このボタンを選択状態に
+            if (type === 'more') {
+                btn.classList.add('selected-need');
+            } else {
+                btn.classList.add('selected');
+            }
+
+            // 改善の場合は入力欄を表示
+            const input = document.getElementById('feedback-' + section);
+            if (type === 'improve') {
+                input.classList.add('show');
+            } else {
+                input.classList.remove('show');
+            }
+
+            // データを保存
+            const labels = {
+                'ok': '✅十分',
+                'more': '📝もっと詳しく',
+                'unnecessary': '❌不要',
+                'improve': '🔧改善'
+            };
+            feedbackData[section] = labels[type];
+
+            updateFeedbackSummary();
+        }
+
+        function updateFeedbackSummary() {
+            const sectionNames = {
+                'overview': '調査概要',
+                'youtuber': '人気YouTuber分析',
+                'needs': '視聴者ニーズ',
+                'service': '撮影サービス比較',
+                'selfie': '自撮りテクニック',
+                'market': '市場データ',
+                'business': 'ビジネス示唆'
+            };
+
+            let summary = '【CC4 YouTube調査レポート フィードバック】\n---\n';
+
+            for (const [key, name] of Object.entries(sectionNames)) {
+                const value = feedbackData[key] || '未選択';
+                const input = document.getElementById('feedback-' + key);
+                const comment = input && input.value ? ` (${input.value})` : '';
+                summary += `${name}: ${value}${comment}\n`;
+            }
+
+            summary += '---';
+
+            document.getElementById('feedbackSummary').textContent = summary;
+        }
+
+        function copyFeedback() {
+            updateFeedbackSummary();
+            const text = document.getElementById('feedbackSummary').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('フィードバックをコピーしました！');
+            });
+        }
+
+        // 入力欄の変更を監視
+        document.querySelectorAll('.feedback-input').forEach(input => {
+            input.addEventListener('input', updateFeedbackSummary);
+        });
+    </script>
+</body>
+</html>
