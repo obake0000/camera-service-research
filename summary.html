@@ -3,174 +3,1129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>統合分析レポート - マッチングアプリ写真撮影サービス</title>
+    <title>CC5 - カメラ撮影サービス統合分析レポート</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', 'Hiragino Sans', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #e0e0e0; min-height: 100vh; padding: 20px; line-height: 1.8; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .back-link { display: inline-block; padding: 10px 20px; background: rgba(255,255,255,0.1); border: 1px solid #fff; border-radius: 25px; color: #fff; text-decoration: none; margin-bottom: 20px; }
-        .back-link:hover { background: rgba(255,255,255,0.2); }
-        h1 { font-size: 2rem; margin-bottom: 10px; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 15px; }
-        .meta { color: #888; margin-bottom: 30px; }
-        h2 { font-size: 1.4rem; color: #10ac84; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        h3 { font-size: 1.1rem; color: #feca57; margin: 25px 0 15px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
-        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        th { color: #888; font-weight: 500; background: rgba(0,0,0,0.2); }
-        .price { color: #48dbfb; font-weight: 600; }
-        ul, ol { margin: 15px 0; padding-left: 25px; }
-        li { margin: 8px 0; }
-        strong { color: #fff; }
-        .card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); }
-        .highlight { background: rgba(16, 172, 132, 0.1); border-left: 4px solid #10ac84; padding: 15px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-        .highlight.warning { background: rgba(255, 107, 107, 0.1); border-left-color: #ff6b6b; }
-        .highlight.info { background: rgba(72, 219, 251, 0.1); border-left-color: #48dbfb; }
-        hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0; }
-        a { color: #48dbfb; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .cc-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title span {
+            font-size: 1.5em;
+        }
+
+        /* フィードバックボタン */
+        .feedback-btns {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+        }
+        .feedback-btn {
+            padding: 6px 12px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        .feedback-btn:hover {
+            transform: scale(1.05);
+        }
+        .feedback-btn.need {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        .feedback-btn.need.selected {
+            background: #4CAF50;
+            color: white;
+        }
+        .feedback-btn.unnecessary {
+            border-color: #f44336;
+            color: #f44336;
+        }
+        .feedback-btn.unnecessary.selected {
+            background: #f44336;
+            color: white;
+        }
+        .feedback-btn.improve {
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+        .feedback-btn.improve.selected {
+            background: #2196F3;
+            color: white;
+        }
+        .feedback-input {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .feedback-input.show {
+            display: block;
+        }
+
+        /* グリッドレイアウト */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* カード */
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+        }
+        .card-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .card-value {
+            font-size: 2.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .card-desc {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* 表 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* ニーズマップ */
+        .needs-map {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .need-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .need-label {
+            width: 200px;
+            font-weight: 500;
+        }
+        .need-bar {
+            flex: 1;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .need-fill {
+            height: 100%;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .need-fill.high { background: linear-gradient(90deg, #ff6b6b, #ee5a5a); }
+        .need-fill.medium { background: linear-gradient(90deg, #feca57, #f39c12); }
+        .need-fill.low { background: linear-gradient(90deg, #48dbfb, #0abde3); }
+
+        /* ターゲットセグメント */
+        .persona-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+        .persona-avatar {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+        .persona-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .persona-detail {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .persona-pain {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 0.85em;
+        }
+
+        /* 競合マップ */
+        .competitor-map {
+            position: relative;
+            height: 400px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        .axis-label {
+            position: absolute;
+            font-size: 0.8em;
+            color: #666;
+            font-weight: bold;
+        }
+        .axis-label.top { top: 10px; left: 50%; transform: translateX(-50%); }
+        .axis-label.bottom { bottom: 10px; left: 50%; transform: translateX(-50%); }
+        .axis-label.left { left: 10px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+        .axis-label.right { right: 10px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+        .competitor-dot {
+            position: absolute;
+            width: 100px;
+            height: 40px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%);
+        }
+        .competitor-dot.target {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+            width: 120px;
+        }
+
+        /* 価格プラン */
+        .price-plans {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .price-plans {
+                grid-template-columns: 1fr;
+            }
+        }
+        .price-card {
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .price-card.bronze {
+            background: linear-gradient(135deg, #a8a8a8 0%, #6c6c6c 100%);
+            color: white;
+        }
+        .price-card.silver {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+        }
+        .price-card.gold {
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+            color: #333;
+        }
+        .price-badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.7em;
+            font-weight: bold;
+            transform: rotate(45deg);
+        }
+        .price-tier {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .price-amount {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .price-amount span {
+            font-size: 0.4em;
+        }
+        .price-features {
+            list-style: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .price-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .price-features li:before {
+            content: "✓ ";
+            font-weight: bold;
+        }
+
+        /* アクションプラン */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 25px;
+            width: 15px;
+            height: 15px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+        .timeline-phase {
+            font-size: 0.8em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .timeline-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .timeline-list {
+            margin-left: 20px;
+        }
+        .timeline-list li {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        /* KPI */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        @media (max-width: 900px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .kpi-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        .kpi-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .kpi-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        /* 5つのアクション */
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        .action-num {
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .action-content h4 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .action-content p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* コピーボタン */
+        .copy-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* リンク */
+        .source-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .source-link {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        .source-link:hover {
+            background: #1a73e8;
+            color: white;
+        }
+
+        /* NEW/RENEWバッジ */
+        .badge-new {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge-renew {
+            background: #48dbfb;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="cc-badge">CC5 統合分析</div>
+
     <div class="container">
-        <a href="summary_dashboard.html" class="back-link">← ダッシュボードに戻る</a>
-        <h1>📊 統合分析レポート</h1>
-        <p class="meta">調査日: 2026年1月18日 | 6チャネル統合分析</p>
+        <h1>カメラ撮影サービス 統合分析レポート</h1>
+        <p class="subtitle">マッチングアプリ・プロフィール写真撮影市場の戦略立案 | 2026年1月18日</p>
 
-        <h2>1. ニーズ・ウォンツの整理</h2>
+        <!-- セクション1: 市場概要 -->
+        <div class="section" id="section-overview">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-overview">
 
-        <h3>顕在ニーズ（言語化されている）</h3>
-        <table>
-            <tr><th>カテゴリ</th><th>ニーズ</th><th>深刻度</th><th>市場規模感</th></tr>
-            <tr><td>写真がない</td><td>「他撮り写真がない」「撮ってくれる友達がいない」</td><td>★★★★★</td><td>男性の9割</td></tr>
-            <tr><td>いいねが来ない</td><td>「マッチしない」「写真を変えたい」</td><td>★★★★★</td><td>男性の8割</td></tr>
-            <tr><td>自撮りがダメ</td><td>「男の自撮りはキモいと言われる」</td><td>★★★★☆</td><td>男性全般</td></tr>
-        </table>
+            <h2 class="section-title"><span>📊</span> 市場概要</h2>
 
-        <h3>潜在ニーズ（まだ気づいていない）</h3>
-        <div class="card">
-            <ul>
-                <li><strong>友達代行:</strong> 「友達に撮ってもらった風」の自然な写真</li>
-                <li><strong>セルフ撮影サポート:</strong> 自分で撮るコツを教えてほしい</li>
-                <li><strong>写真診断のみ:</strong> 撮影なしでアドバイスだけほしい</li>
-                <li><strong>匿名性:</strong> サービス利用がバレたくない</li>
-            </ul>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-title">マッチングアプリ市場規模</div>
+                    <div class="card-value">837億円</div>
+                    <div class="card-desc">2026年予測（前年比+15%成長）</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">写真で判断する人</div>
+                    <div class="card-value">86%</div>
+                    <div class="card-desc">プロフィールで写真を最重視</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">プロ撮影後の効果</div>
+                    <div class="card-value">2.05倍</div>
+                    <div class="card-desc">マッチング率の向上</div>
+                </div>
+            </div>
+
+            <div class="source-links">
+                <a href="https://www.google.com/search?q=マッチングアプリ+市場規模+2026" class="source-link" target="_blank">市場規模データ</a>
+                <a href="https://www.ibjapan.jp/match-lab/profile-picture/" class="source-link" target="_blank">IBJ調査</a>
+            </div>
         </div>
 
-        <h3>ペインポイント（最大の障壁）TOP5</h3>
-        <div class="highlight warning">
-            <ol>
-                <li><strong>恥ずかしさ</strong> ★★★★★ - 撮影行為への抵抗、目的を知られることへの抵抗</li>
-                <li><strong>費用（高い）</strong> ★★★★☆ - 最安でも7,700円〜は高い</li>
-                <li><strong>バレる恐怖</strong> ★★★★☆ - マッチングアプリを使っていることを知られたくない</li>
-                <li><strong>プロ感への懸念</strong> ★★★☆☆ - 「広告みたいな写真になるのが嫌」</li>
-                <li><strong>効果への疑問</strong> ★★★☆☆ - 「高いお金を払っても100%効果があるわけではない」</li>
-            </ol>
+        <!-- セクション2: ニーズ分析 -->
+        <div class="section" id="section-needs">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-needs">
+
+            <h2 class="section-title"><span>🎯</span> ニーズ・ペインポイント分析</h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3 style="margin-bottom: 15px; color: #333;">顕在ニーズ（深刻度順）</h3>
+                    <div class="needs-map">
+                        <div class="need-item">
+                            <div class="need-label">写真がない・撮れない</div>
+                            <div class="need-bar"><div class="need-fill high" style="width: 95%;">男性の9割</div></div>
+                        </div>
+                        <div class="need-item">
+                            <div class="need-label">いいねが来ない</div>
+                            <div class="need-bar"><div class="need-fill high" style="width: 90%;">男性の8割</div></div>
+                        </div>
+                        <div class="need-item">
+                            <div class="need-label">自撮りがダメと言われる</div>
+                            <div class="need-bar"><div class="need-fill medium" style="width: 75%;">深刻度高</div></div>
+                        </div>
+                        <div class="need-item">
+                            <div class="need-label">何が良いかわからない</div>
+                            <div class="need-bar"><div class="need-fill medium" style="width: 70%;">初心者全般</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 15px; color: #333;">最大の障壁TOP3 <span class="badge-new">NEW</span></h3>
+                    <table>
+                        <tr>
+                            <th>順位</th>
+                            <th>障壁</th>
+                            <th>深刻度</th>
+                        </tr>
+                        <tr>
+                            <td>1位</td>
+                            <td><strong>恥ずかしさ</strong></td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>2位</td>
+                            <td>費用（高い）</td>
+                            <td>★★★★☆</td>
+                        </tr>
+                        <tr>
+                            <td>3位</td>
+                            <td>バレる恐怖</td>
+                            <td>★★★★☆</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; padding: 20px; background: #fff3cd; border-radius: 15px; border-left: 5px solid #ffc107;">
+                <h4 style="color: #856404; margin-bottom: 10px;">💡 重要な発見</h4>
+                <p style="color: #856404;">「広告みたいな写真より、友達が自然に撮ってくれた写真のほうが強い」<br>→ <strong>プロ感を消す方向</strong>のサービス設計に大きな可能性</p>
+            </div>
         </div>
 
-        <h2>2. ターゲットセグメント</h2>
+        <!-- セクション3: ターゲットセグメント -->
+        <div class="section" id="section-target">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-target">
 
-        <h3>【最優先ターゲット】30代男性・婚活層</h3>
-        <div class="card">
-            <table>
-                <tr><th>項目</th><th>詳細</th></tr>
-                <tr><td>年齢</td><td>30〜39歳</td></tr>
-                <tr><td>状況</td><td>マッチングアプリで苦戦中、いいねが来ない</td></tr>
-                <tr><td>収入</td><td>年収400〜700万円（投資可能）</td></tr>
-                <tr><td>心理</td><td>「このままではマズい」という焦り</td></tr>
-            </table>
-            <p><strong>なぜこの層か？</strong> 写真の重要性を痛感 / 投資できる経済力 / 時間がない / 真剣度が高い</p>
+            <h2 class="section-title"><span>👥</span> ターゲットセグメント</h2>
+
+            <div class="grid-3">
+                <div class="persona-card" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);">
+                    <div class="persona-avatar">👨</div>
+                    <div class="persona-name">【最優先】30代男性</div>
+                    <div class="persona-detail">婚活層・年収400〜700万円</div>
+                    <div class="persona-pain">
+                        <strong>ペイン:</strong> いいねが来ない、写真を撮る友達がいない、「このままではマズい」という焦り
+                    </div>
+                </div>
+                <div class="persona-card">
+                    <div class="persona-avatar">👩</div>
+                    <div class="persona-name">20代後半女性</div>
+                    <div class="persona-detail">婚活準備層・27〜32歳</div>
+                    <div class="persona-pain">
+                        <strong>ペイン:</strong> 30歳を前に本格的に婚活、自然に盛れる写真がほしい
+                    </div>
+                </div>
+                <div class="persona-card" style="background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);">
+                    <div class="persona-avatar">💼</div>
+                    <div class="persona-name">ビジネス層</div>
+                    <div class="persona-detail">起業・転職・副業開始</div>
+                    <div class="persona-pain">
+                        <strong>ペイン:</strong> LinkedIn、会社HP、名刺用の写真がほしい
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <h3 style="margin-bottom: 15px;">年齢×性別 優先度マトリクス <span class="badge-renew">RENEW</span></h3>
+                <table>
+                    <tr>
+                        <th>年代</th>
+                        <th>男性のニーズ</th>
+                        <th>女性のニーズ</th>
+                        <th>優先度</th>
+                    </tr>
+                    <tr>
+                        <td>20代後半</td>
+                        <td>マッチング率UP、清潔感</td>
+                        <td>自然な可愛さ、婚活準備</td>
+                        <td>○</td>
+                    </tr>
+                    <tr style="background: #e8f5e9;">
+                        <td><strong>30代前半</strong></td>
+                        <td><strong>成果重視、いいね数増加</strong></td>
+                        <td><strong>30歳の壁対策</strong></td>
+                        <td><strong style="color: #4CAF50;">◎</strong></td>
+                    </tr>
+                    <tr style="background: #e8f5e9;">
+                        <td><strong>30代後半</strong></td>
+                        <td>若作りしない魅力引き出し</td>
+                        <td>年齢に合った撮り方</td>
+                        <td><strong style="color: #4CAF50;">◎</strong></td>
+                    </tr>
+                    <tr>
+                        <td>40代以上</td>
+                        <td>高単価OK、確実な効果</td>
+                        <td>プロ感より自然さ</td>
+                        <td>○</td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
-        <h2>3. 競合との差別化ポイント</h2>
-        <div class="highlight info">
-            <h3>空いているポジション（攻める方向）</h3>
-            <ul>
-                <li><strong>価格:</strong> 最安7,700円 → 3,000〜5,000円の「お試し」枠</li>
-                <li><strong>雰囲気:</strong> プロ感が強い → 「友達代行」コンセプト</li>
-                <li><strong>ターゲット:</strong> 汎用的 → 「30代男性婚活」特化</li>
-                <li><strong>撮影機材:</strong> 一眼レフ → あえてスマホ撮影</li>
-                <li><strong>付加価値:</strong> 撮影のみ → 撮影＋プロフ添削＋恋愛相談</li>
-            </ul>
+        <!-- セクション4: 競合分析 -->
+        <div class="section" id="section-competitor">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-competitor">
+
+            <h2 class="section-title"><span>⚔️</span> 競合分析・差別化ポイント</h2>
+
+            <div class="competitor-map">
+                <div class="axis-label top">高価格</div>
+                <div class="axis-label bottom">低価格</div>
+                <div class="axis-label left">プロ感強い</div>
+                <div class="axis-label right">自然・カジュアル</div>
+
+                <div class="competitor-dot" style="top: 15%; left: 30%;">写真スタジオ<br>3万円〜</div>
+                <div class="competitor-dot" style="top: 25%; left: 35%;">Lovegraph<br>2万円〜</div>
+                <div class="competitor-dot" style="top: 40%; left: 40%;">Photojoy<br>9,900円〜</div>
+                <div class="competitor-dot" style="top: 45%; left: 25%;">fotowa<br>19,800円〜</div>
+                <div class="competitor-dot" style="top: 75%; left: 35%;">タイムチケット<br>3,000円〜</div>
+                <div class="competitor-dot target" style="top: 55%; left: 70%;">【狙い目】<br>友達代行サービス</div>
+            </div>
+
+            <div style="margin-top: 25px; padding: 20px; background: #e3f2fd; border-radius: 15px;">
+                <h4 style="color: #1565c0; margin-bottom: 15px;">💎 差別化コンセプト案 <span class="badge-new">NEW</span></h4>
+                <ul style="margin-left: 20px; color: #1565c0;">
+                    <li>一眼レフではなく<strong>iPhone撮影</strong>（シャッター音なし）</li>
+                    <li>「プロ」ではなく<strong>「写真が得意な友達」</strong>というポジション</li>
+                    <li><strong>「マッチングアプリ用」と言わなくてOK</strong></li>
+                    <li>30代男性の「いいね数を増やしたい」に特化</li>
+                    <li>撮影後の<strong>プロフィール添削まで</strong>セット</li>
+                </ul>
+            </div>
+
+            <div class="source-links">
+                <a href="https://photojoy.jp/" class="source-link" target="_blank">Photojoy</a>
+                <a href="https://fotowa.com/" class="source-link" target="_blank">fotowa</a>
+                <a href="https://lovegraph.me/" class="source-link" target="_blank">Lovegraph</a>
+                <a href="https://www.timeticket.jp/items/c_5/sc_62/" class="source-link" target="_blank">タイムチケット</a>
+            </div>
         </div>
 
-        <h2>4. 価格戦略（松竹梅）</h2>
-        <table>
-            <tr><th>プラン</th><th>価格</th><th>選択率予測</th><th>戦略的意図</th></tr>
-            <tr><td><strong>松</strong>（プレミアム）</td><td class="price">¥18,000</td><td>20%</td><td>アンカー効果、高収益</td></tr>
-            <tr><td><strong>竹</strong>（スタンダード）</td><td class="price">¥10,000</td><td><strong>50%</strong></td><td>メイン収益源</td></tr>
-            <tr><td><strong>梅</strong>（お試し）</td><td class="price">¥4,500</td><td>30%</td><td>集客、リピート促進</td></tr>
-        </table>
+        <!-- セクション5: 価格戦略 -->
+        <div class="section" id="section-price">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-price">
 
-        <h2>5. マーケティング戦略</h2>
-        <h3>優先チャネル</h3>
-        <table>
-            <tr><th>優先度</th><th>チャネル</th><th>施策</th></tr>
-            <tr><td>◎</td><td>タイムチケット</td><td>出品＆実績積み（即効性◎）</td></tr>
-            <tr><td>◎</td><td>Twitter/X</td><td>作例投稿、Before/After（バイラル狙い）</td></tr>
-            <tr><td>○</td><td>Instagram</td><td>作品投稿（ブランディング）</td></tr>
-            <tr><td>○</td><td>YouTube</td><td>撮影ノウハウ動画（長期的な信頼構築）</td></tr>
-        </table>
+            <h2 class="section-title"><span>💰</span> 価格戦略（松竹梅プラン）</h2>
 
-        <h3>訴求メッセージ案</h3>
-        <div class="card">
-            <ul>
-                <li><strong>友達代行型:</strong> 「友達に撮ってもらった」ような自然な写真で、いいね数を3倍に</li>
-                <li><strong>悩み解決型:</strong> 「写真がない」「撮ってくれる人がいない」その悩み、解決します。</li>
-                <li><strong>成果訴求型:</strong> 撮影後2週間でいいね数が平均2.5倍に。30代男性専門。</li>
-                <li><strong>恥ずかしさ解消型:</strong> 「マッチングアプリ用」と言わなくてOK。SNS用プロフィール撮影。</li>
-            </ul>
+            <div class="price-plans">
+                <div class="price-card bronze">
+                    <div class="price-tier">梅 お試しプラン</div>
+                    <div class="price-amount">¥4,500<span>（税込）</span></div>
+                    <ul class="price-features">
+                        <li>30分撮影</li>
+                        <li>データ納品（15枚）</li>
+                        <li>撮影後アドバイス（簡易）</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">集客用・リピート促進</p>
+                </div>
+                <div class="price-card silver">
+                    <div class="price-badge">一番人気</div>
+                    <div class="price-tier">竹 スタンダード</div>
+                    <div class="price-amount">¥10,000<span>（税込）</span></div>
+                    <ul class="price-features">
+                        <li>1時間撮影</li>
+                        <li>全データ納品（30枚以上）</li>
+                        <li>簡易プロフィール添削</li>
+                    </ul>
+                    <p style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">メイン収益源・利益率最高</p>
+                </div>
+                <div class="price-card gold">
+                    <div class="price-tier">松 プレミアム</div>
+                    <div class="price-amount">¥18,000<span>（税込）</span></div>
+                    <ul class="price-features">
+                        <li>2時間撮影（複数ロケーション）</li>
+                        <li>全データ納品（50枚以上）</li>
+                        <li>プロフィール添削（1回）</li>
+                        <li>マッチングアプリ運用相談（30分）</li>
+                        <li>3ヶ月後フォロー撮影50%OFF</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px;">
+                <h3 style="margin-bottom: 15px;">オプション設計</h3>
+                <table>
+                    <tr>
+                        <th>オプション</th>
+                        <th>価格</th>
+                        <th>内容</th>
+                    </tr>
+                    <tr>
+                        <td>プロフィール添削</td>
+                        <td>+¥2,000</td>
+                        <td>文章の書き方アドバイス</td>
+                    </tr>
+                    <tr>
+                        <td>服装コーディネート相談</td>
+                        <td>+¥1,500</td>
+                        <td>撮影前のLINE相談</td>
+                    </tr>
+                    <tr>
+                        <td>特急納品（24時間以内）</td>
+                        <td>+¥1,500</td>
+                        <td>通常3日→即日</td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
-        <h2>6. 実行アクションプラン</h2>
+        <!-- セクション6: マーケティング戦略 -->
+        <div class="section" id="section-marketing">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-marketing">
 
-        <h3>Phase 1: 準備期（1〜2週間）</h3>
-        <div class="highlight">
-            <ul>
-                <li>ポートフォリオ作成（友人知人に頼んで10件以上の作例を撮影）</li>
-                <li>タイムチケット出品（「梅プラン」¥4,500でまず出品）</li>
-                <li>SNSアカウント開設（Twitter/Instagram専用アカウント作成）</li>
-            </ul>
+            <h2 class="section-title"><span>📢</span> マーケティング戦略</h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3 style="margin-bottom: 15px;">チャネル優先度</h3>
+                    <table>
+                        <tr>
+                            <th>優先度</th>
+                            <th>チャネル</th>
+                            <th>施策</th>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td><strong>◎</strong></td>
+                            <td><strong>タイムチケット</strong></td>
+                            <td>出品＆実績積み</td>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td><strong>◎</strong></td>
+                            <td><strong>Twitter/X</strong></td>
+                            <td>作例投稿、Before/After</td>
+                        </tr>
+                        <tr>
+                            <td>○</td>
+                            <td>Instagram</td>
+                            <td>作品投稿、ストーリーズ</td>
+                        </tr>
+                        <tr>
+                            <td>○</td>
+                            <td>YouTube</td>
+                            <td>撮影ノウハウ動画</td>
+                        </tr>
+                        <tr>
+                            <td>△</td>
+                            <td>ココナラ</td>
+                            <td>補助的な集客</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 15px;">訴求メッセージ案 <span class="badge-new">NEW</span></h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; font-weight: bold; color: #333; margin-bottom: 10px;">【案1】友達代行型</p>
+                        <p style="color: #667eea; font-style: italic;">「友達に撮ってもらった」ような自然な写真で、いいね数を3倍にしませんか？</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                        <p style="font-size: 1.1em; font-weight: bold; color: #333; margin-bottom: 10px;">【案2】恥ずかしさ解消型</p>
+                        <p style="color: #667eea; font-style: italic;">「マッチングアプリ用」と言わなくてOK。SNS用プロフィール撮影、気軽にどうぞ。</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 15px;">
+                        <p style="font-size: 1.1em; font-weight: bold; color: #333; margin-bottom: 10px;">【案3】成果訴求型</p>
+                        <p style="color: #667eea; font-style: italic;">撮影後2週間でいいね数が平均2.5倍に。30代男性専門のマッチングアプリ写真撮影。</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <h3>Phase 2: 実績構築期（1〜2ヶ月）</h3>
-        <div class="highlight">
-            <ul>
-                <li>初回割引キャンペーン（先着10名¥3,000で実績作り）</li>
-                <li>レビュー依頼（撮影後にレビューをお願い、★4.8以上維持）</li>
-                <li>SNS毎日投稿（Before/After、ノウハウ投稿）</li>
-            </ul>
-            <p><strong>目標:</strong> 月売上10万円</p>
+        <!-- セクション7: アクションプラン -->
+        <div class="section" id="section-action">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-action">
+
+            <h2 class="section-title"><span>🚀</span> 実行可能なアクションプラン</h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3 style="margin-bottom: 15px;">フェーズ別ロードマップ</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-phase">Phase 1: 準備期（1〜2週間）</div>
+                            <div class="timeline-title">基盤構築</div>
+                            <ul class="timeline-list">
+                                <li>ポートフォリオ作成（10件以上）</li>
+                                <li>タイムチケット出品（梅プラン¥4,500）</li>
+                                <li>SNSアカウント開設</li>
+                                <li>本人確認完了</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-phase">Phase 2: 実績構築期（1〜2ヶ月）</div>
+                            <div class="timeline-title">顧客獲得・レビュー蓄積</div>
+                            <ul class="timeline-list">
+                                <li>初回割引キャンペーン（先着10名¥3,000）</li>
+                                <li>レビュー★4.8以上維持</li>
+                                <li>SNS毎日投稿</li>
+                                <li>成功事例5件収集</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-phase">Phase 3: 拡大期（3〜6ヶ月）</div>
+                            <div class="timeline-title">収益化・スケール</div>
+                            <ul class="timeline-list">
+                                <li>価格改定（竹プラン¥10,000）</li>
+                                <li>松プラン追加</li>
+                                <li>YouTube開始</li>
+                                <li>月売上30万円達成</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin-bottom: 15px;">Phase 3 目標KPI</h3>
+                    <div class="kpi-grid">
+                        <div class="kpi-box">
+                            <div class="kpi-value">30件</div>
+                            <div class="kpi-label">月間撮影数</div>
+                        </div>
+                        <div class="kpi-box">
+                            <div class="kpi-value">30万円</div>
+                            <div class="kpi-label">月間売上</div>
+                        </div>
+                        <div class="kpi-box">
+                            <div class="kpi-value">50件</div>
+                            <div class="kpi-label">累計レビュー</div>
+                        </div>
+                        <div class="kpi-box">
+                            <div class="kpi-value">25%</div>
+                            <div class="kpi-label">リピート率</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 25px 0 15px;">収益シミュレーション（Phase 3）</h3>
+                    <table>
+                        <tr>
+                            <th>項目</th>
+                            <th>金額</th>
+                        </tr>
+                        <tr>
+                            <td>売上（30件×¥10,000）</td>
+                            <td style="text-align: right;">¥300,000</td>
+                        </tr>
+                        <tr>
+                            <td>プラットフォーム手数料（20%）</td>
+                            <td style="text-align: right;">-¥60,000</td>
+                        </tr>
+                        <tr>
+                            <td>交通費等</td>
+                            <td style="text-align: right;">-¥20,000</td>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td><strong>純利益</strong></td>
+                            <td style="text-align: right;"><strong>¥220,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <h3>Phase 3: 拡大期（3〜6ヶ月）</h3>
-        <div class="highlight">
-            <ul>
-                <li>価格改定（実績を元に正規価格へ移行、竹プラン¥10,000）</li>
-                <li>松プラン追加（高単価プランの導入）</li>
-                <li>紹介制度開始（紹介者・被紹介者に割引）</li>
-            </ul>
-            <p><strong>目標:</strong> 月売上30万円</p>
+        <!-- セクション8: 今日から始める5つのアクション -->
+        <div class="section" id="section-today">
+            <div class="feedback-btns">
+                <button class="feedback-btn need" onclick="toggleFeedback(this, 'need')">✅もっと詳しく</button>
+                <button class="feedback-btn unnecessary" onclick="toggleFeedback(this, 'unnecessary')">❌不要</button>
+                <button class="feedback-btn improve" onclick="toggleFeedback(this, 'improve')">📝改善</button>
+            </div>
+            <input type="text" class="feedback-input" placeholder="改善内容を入力..." id="input-today">
+
+            <h2 class="section-title"><span>⚡</span> 今日から始められる5つのアクション</h2>
+
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-num">1</div>
+                    <div class="action-content">
+                        <h4>タイムチケットに会員登録する</h4>
+                        <p>無料・10分で完了。本人確認も同時に申請</p>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num">2</div>
+                    <div class="action-content">
+                        <h4>友人3人に「写真撮らせて」とお願いする</h4>
+                        <p>ポートフォリオ用の作例を確保。無料でOK</p>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num">3</div>
+                    <div class="action-content">
+                        <h4>Twitter専用アカウントを作成する</h4>
+                        <p>@[名前]_photo のような分かりやすいID</p>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num">4</div>
+                    <div class="action-content">
+                        <h4>競合のタイムチケット出品を10件分析する</h4>
+                        <p>人気の理由、レビュー傾向、価格設定を把握</p>
+                    </div>
+                </div>
+                <div class="action-item">
+                    <div class="action-num">5</div>
+                    <div class="action-content">
+                        <h4>最初の出品文を書いてみる</h4>
+                        <p>タイトル、説明文、価格を決める</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <h2>7. 今日から始められる5つのアクション</h2>
-        <div class="card" style="background: rgba(16, 172, 132, 0.1); border-color: #10ac84;">
-            <ol>
-                <li><strong>タイムチケットに会員登録する</strong>（無料・10分）</li>
-                <li><strong>友人3人に「写真撮らせて」とお願いする</strong> → ポートフォリオ用の作例を確保</li>
-                <li><strong>Twitter専用アカウントを作成する</strong> → @[名前]_photo のような分かりやすいID</li>
-                <li><strong>競合のタイムチケット出品を10件分析する</strong> → 人気の理由、レビュー傾向を把握</li>
-                <li><strong>最初の出品文を書いてみる</strong> → タイトル、説明文、価格を決める</li>
-            </ol>
+        <!-- 調査ファイルリンク -->
+        <div class="section" id="section-sources">
+            <h2 class="section-title"><span>📚</span> 調査ファイル・出典</h2>
+            <div class="source-links">
+                <a href="01_coconala.md" class="source-link">01_coconala.md（ココナラ調査）</a>
+                <a href="02_timeticket.md" class="source-link">02_timeticket.md（タイムチケット調査）</a>
+                <a href="03_twitter.md" class="source-link">03_twitter.md（Twitter調査）</a>
+                <a href="04_youtube.md" class="source-link">04_youtube.md（YouTube調査）</a>
+                <a href="summary.md" class="source-link">summary.md（統合分析）</a>
+            </div>
         </div>
-
-        <hr>
-        <p style="text-align: center; color: #666;">
-            調査ファイル:
-            <a href="01_coconala.html">ココナラ</a> |
-            <a href="02_timeticket.html">タイムチケット</a> |
-            <a href="03_twitter.html">Twitter/X</a> |
-            <a href="04_youtube.html">YouTube</a> |
-            <a href="06_google_ads.html">Google広告</a>
-        </p>
     </div>
+
+    <button class="copy-btn" onclick="copyFeedback()">📋 フィードバックをコピー</button>
+
+    <script>
+        function toggleFeedback(btn, type) {
+            const section = btn.closest('.section');
+            const allBtns = section.querySelectorAll('.feedback-btn');
+            const input = section.querySelector('.feedback-input');
+
+            // 同じセクションの他のボタンの選択を解除
+            allBtns.forEach(b => {
+                if (b !== btn) b.classList.remove('selected');
+            });
+
+            // クリックしたボタンの選択状態をトグル
+            btn.classList.toggle('selected');
+
+            // 改善ボタンの場合、入力欄を表示
+            if (type === 'improve') {
+                input.classList.toggle('show', btn.classList.contains('selected'));
+            } else {
+                input.classList.remove('show');
+            }
+        }
+
+        function copyFeedback() {
+            let feedback = "【CC5 統合分析レポート フィードバック】\n\n";
+
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const title = section.querySelector('.section-title');
+                if (!title) return;
+
+                const sectionName = title.textContent.trim();
+                const selectedBtn = section.querySelector('.feedback-btn.selected');
+                const input = section.querySelector('.feedback-input');
+
+                if (selectedBtn) {
+                    let status = '';
+                    if (selectedBtn.classList.contains('need')) {
+                        status = '✅ もっと詳しく';
+                    } else if (selectedBtn.classList.contains('unnecessary')) {
+                        status = '❌ 不要';
+                    } else if (selectedBtn.classList.contains('improve')) {
+                        status = '📝 改善: ' + (input.value || '（内容未入力）');
+                    }
+                    feedback += `${sectionName}\n→ ${status}\n\n`;
+                }
+            });
+
+            if (feedback === "【CC5 統合分析レポート フィードバック】\n\n") {
+                feedback += "（フィードバックなし）";
+            }
+
+            navigator.clipboard.writeText(feedback).then(() => {
+                alert('フィードバックをクリップボードにコピーしました！');
+            });
+        }
+    </script>
 </body>
 </html>

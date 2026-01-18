@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\deep_research_guide.html\")",
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\03_twitter_report.html\")",
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\02_timeticket.html\")",
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\01_coconala_report.html\")",
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\summary_dashboard.html\")",
+      "Bash(git init:*)",
+      "Bash(ls:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nマッチングアプリ写真撮影サービス市場調査レポート\n\n- ダッシュボード（summary_dashboard.html）\n- ココナラ調査（01_coconala.html）\n- タイムチケット調査（02_timeticket.html）\n- Twitter/X調査（03_twitter.html）\n- YouTube調査（04_youtube.html）\n- Google広告調査（06_google_ads.html）\n- 統合分析レポート（summary.html）\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(start \"\" \"c:\\\\re\\\\カメラサービスの比較\\\\lp_camera_service_cc5.html\")",
+      "Bash(zip -r:*)",
+      "Bash(winget install:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create camera-service-research --public --description \"マッチングアプリ写真撮影サービス市場調査レポート\" --source . --push)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/obake0000/camera-service-research/pages -X POST -f source='{\"\"branch\"\":\"\"master\"\",\"\"path\"\":\"\"/\"\"}')",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/obake0000/camera-service-research/pages -X POST -f build_type=legacy -f source[branch]=master -f source[path]=/)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/obake0000/camera-service-research/pages/builds --jq '.[0]')",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
