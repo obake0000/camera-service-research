@@ -18,7 +18,8 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/obake0000/camera-service-research/pages -X POST -f build_type=legacy -f source[branch]=master -f source[path]=/)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/obake0000/camera-service-research/pages/builds --jq '.[0]')",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ]
   }
 }
